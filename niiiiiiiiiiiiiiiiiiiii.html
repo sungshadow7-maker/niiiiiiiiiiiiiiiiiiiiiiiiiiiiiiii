@@ -1,0 +1,4806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Villa Sakura | Premium Loader & East-West Fusion Residences</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Noto+Serif+JP:wght@300;400;500&family=Cinzel:wght@400;500;600&family=Shippori+Mincho:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        /* ===== ENHANCED TYPOGRAPHY SYSTEM ===== */
+        :root {
+            /* Updated Font Stack */
+            --font-heading-primary: 'Cinzel', 'Shippori Mincho', 'Noto Serif JP', serif;
+            --font-heading-secondary: 'Yeseva One', 'Times New Roman', serif;
+            --font-body-japanese: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+            --font-body-western: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-decorative: 'Shippori Mincho', 'Noto Serif JP', serif;
+            
+            /* Enhanced Type Scale */
+            --text-xs: 0.75rem;      /* 12px */
+            --text-sm: 0.875rem;     /* 14px */
+            --text-base: 1rem;       /* 16px */
+            --text-lg: 1.125rem;     /* 18px */
+            --text-xl: 1.25rem;      /* 20px */
+            --text-2xl: 1.5rem;      /* 24px */
+            --text-3xl: 1.875rem;    /* 30px */
+            --text-4xl: 2.25rem;     /* 36px */
+            --text-5xl: 3rem;        /* 48px */
+            --text-6xl: 3.75rem;     /* 60px */
+            --text-7xl: 4.5rem;      /* 72px */
+            --text-8xl: 6rem;        /* 96px */
+            
+            /* Line Heights */
+            --leading-tight: 1.1;
+            --leading-snug: 1.3;
+            --leading-normal: 1.5;
+            --leading-relaxed: 1.75;
+            --leading-loose: 2;
+            
+            /* Letter Spacing */
+            --tracking-tight: -0.05em;
+            --tracking-normal: 0;
+            --tracking-wide: 0.05em;
+            --tracking-wider: 0.1em;
+            --tracking-widest: 0.15em;
+            
+            /* Color Palette */
+            --beni: #c53d43;
+            --terracotta: #b3543a;
+            --gold-leaf: #d4b483;
+            --kuro: #2d2926;
+            --washi: #f5f1e8;
+            --shikkui: #e8e1d3;
+            --shodo: #1a1a1a;
+            --murasaki: #6a4c9c;
+            --marble: #f0ece2;
+            --sakura: #ffb7c5;
+            --verdaccio: #556b2f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* ===== IMPROVED TEXT RENDERING ===== */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-smooth: always;
+        }
+        
+        /* ===== LOADER STYLES ===== */
+        .premium-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        
+        .loader-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            padding: 3rem;
+        }
+        
+        .loader-geometry {
+            position: relative;
+            height: 300px;
+            margin-bottom: 4rem;
+        }
+        
+        .geometry-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, var(--beni), transparent);
+            height: 1px;
+            width: 100%;
+            top: 50%;
+            transform-origin: left;
+            transform: scaleX(0);
+            animation: lineExpand 2s ease-out infinite alternate;
+        }
+        
+        .geometry-circle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--beni);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: circlePulse 2s ease-in-out infinite;
+        }
+        
+        .geometry-circle:nth-child(2) {
+            animation-delay: 0.2s;
+            background: var(--terracotta);
+            width: 8px;
+            height: 8px;
+        }
+        
+        .geometry-circle:nth-child(3) {
+            animation-delay: 0.4s;
+            background: var(--gold-leaf);
+            width: 4px;
+            height: 4px;
+        }
+        
+        .geometry-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(197, 61, 67, 0.6);
+            top: 50%;
+            animation: dotOrbit 3s linear infinite;
+        }
+        
+        .geometry-dot:nth-child(4) { animation-delay: 0.5s; }
+        .geometry-dot:nth-child(5) { animation-delay: 1s; }
+        .geometry-dot:nth-child(6) { animation-delay: 1.5s; }
+        .geometry-dot:nth-child(7) { animation-delay: 2s; }
+        .geometry-dot:nth-child(8) { animation-delay: 2.5s; }
+        
+        .loader-text {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .loader-title {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-5xl);
+            font-weight: 400;
+            letter-spacing: var(--tracking-widest);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.5s;
+            color: var(--washi);
+            text-transform: uppercase;
+            line-height: var(--leading-tight);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loader-subtitle {
+            font-family: var(--font-body-japanese);
+            font-size: var(--text-sm);
+            font-weight: 300;
+            letter-spacing: var(--tracking-wider);
+            text-transform: uppercase;
+            color: rgba(245, 241, 232, 0.7);
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.7s;
+            line-height: var(--leading-snug);
+        }
+        
+        .progress-container {
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+        
+        .progress-bar {
+            height: 1px;
+            background: rgba(245, 241, 232, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, var(--beni), var(--terracotta));
+            width: 0%;
+            animation: progressFill 3s ease-in-out forwards;
+        }
+        
+        .loader-action {
+            text-align: center;
+        }
+        
+        .enter-btn {
+            background: transparent;
+            border: none;
+            color: rgba(245, 241, 232, 0.8);
+            font-family: var(--font-body-japanese);
+            font-size: var(--text-sm);
+            letter-spacing: var(--tracking-wide);
+            text-transform: uppercase;
+            padding: 0.75rem 2rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .enter-btn:hover {
+            color: var(--beni);
+        }
+        
+        .enter-btn::before,
+        .enter-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: var(--beni);
+            left: 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .enter-btn::before {
+            top: 0;
+            transform-origin: left;
+        }
+        
+        .enter-btn::after {
+            bottom: 0;
+            transform-origin: right;
+        }
+        
+        .enter-btn:hover::before,
+        .enter-btn:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .loader-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .loader-particle {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: var(--beni);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 4s linear infinite;
+        }
+        
+        .loader-particle:nth-child(1) { left: 20%; top: 20%; animation-delay: 0s; }
+        .loader-particle:nth-child(2) { left: 80%; top: 30%; animation-delay: 0.5s; }
+        .loader-particle:nth-child(3) { left: 40%; top: 80%; animation-delay: 1s; }
+        .loader-particle:nth-child(4) { left: 60%; top: 60%; animation-delay: 1.5s; }
+        .loader-particle:nth-child(5) { left: 10%; top: 70%; animation-delay: 2s; }
+        .loader-particle:nth-child(6) { left: 90%; top: 10%; animation-delay: 2.5s; }
+        .loader-particle:nth-child(7) { left: 70%; top: 90%; animation-delay: 3s; }
+        .loader-particle:nth-child(8) { left: 30%; top: 40%; animation-delay: 3.5s; }
+        
+        .status-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 1s;
+        }
+        
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(245, 241, 232, 0.2);
+            animation: statusPulse 1.5s ease-in-out infinite;
+        }
+        
+        .status-dot:nth-child(1) { animation-delay: 0s; }
+        .status-dot:nth-child(2) { animation-delay: 0.2s; }
+        .status-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        .loader-copyright {
+            position: absolute;
+            bottom: 2rem;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-body-japanese);
+            font-size: var(--text-xs);
+            font-weight: 300;
+            letter-spacing: var(--tracking-wide);
+            color: rgba(245, 241, 232, 0.3);
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 1.2s;
+        }
+        
+        @keyframes lineExpand {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+        
+        @keyframes circlePulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
+        
+        @keyframes dotOrbit {
+            0% {
+                left: 0;
+                transform: translateY(-50%);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: 100%;
+                transform: translateY(-50%);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes progressFill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.6;
+                transform: translateY(-20px) scale(1);
+            }
+            100% {
+                transform: translateY(-40px) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes statusPulse {
+            0%, 100% { 
+                background: rgba(245, 241, 232, 0.2);
+                transform: scale(1);
+            }
+            50% { 
+                background: var(--beni);
+                transform: scale(1.2);
+            }
+        }
+        
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        
+        .loader-complete {
+            animation: fadeOut 0.8s ease forwards;
+        }
+        
+        @media (max-width: 768px) {
+            .loader-container {
+                padding: 2rem;
+            }
+            
+            .loader-geometry {
+                height: 200px;
+                margin-bottom: 3rem;
+            }
+            
+            .loader-title {
+                font-size: var(--text-4xl);
+                letter-spacing: var(--tracking-wider);
+            }
+            
+            .loader-subtitle {
+                font-size: var(--text-xs);
+                letter-spacing: var(--tracking-wide);
+            }
+        }
+        
+        /* ===== MAIN WEBSITE STYLES ===== */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+        
+        body {
+            font-family: var(--font-body-western);
+            background: var(--washi);
+            color: var(--shodo);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(212, 180, 131, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(197, 61, 67, 0.03) 0%, transparent 20%);
+        }
+        
+        .website-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        
+        .website-content.visible {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* ===== ENHANCED TRANSLUCENT NAVIGATION ===== */
+        .fusion-nav {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1400px;
+            background: rgba(245, 241, 232, 0.15) !important; /* More translucent */
+            backdrop-filter: blur(25px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+            border: 1px solid rgba(212, 180, 131, 0.2) !important;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 
+                0 8px 32px rgba(45, 41, 38, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 20px;
+            animation: floatIn 0.8s ease-out 0.5s both;
+        }
+        
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        
+        .nav-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .fusion-nav.scrolled {
+            padding: 0.8rem 2rem;
+            background: rgba(245, 241, 232, 0.2) !important; /* More translucent on scroll */
+            backdrop-filter: blur(30px) saturate(220%) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(220%) !important;
+            top: 1rem;
+            width: 95%;
+            box-shadow: 
+                0 12px 48px rgba(45, 41, 38, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.12);
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo-kanji {
+            font-family: var(--font-body-japanese);
+            font-size: var(--text-4xl);
+            color: var(--beni);
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+        
+        .logo-text {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-2xl);
+            color: var(--kuro);
+            font-weight: 500;
+            letter-spacing: var(--tracking-wide);
+            line-height: var(--leading-tight);
+        }
+        
+        .nav-divider {
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(to bottom, transparent, var(--gold-leaf), transparent);
+            margin: 0 2rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-item {
+            color: var(--kuro);
+            text-decoration: none;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--beni), var(--terracotta));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            color: var(--beni);
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        
+        /* Appointment Button in Navigation */
+        .nav-appointment-btn {
+            background: linear-gradient(135deg, var(--beni), var(--terracotta));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 12px;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            letter-spacing: var(--tracking-wide);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(197, 61, 67, 0.2);
+            margin-left: 1rem;
+        }
+        
+        .nav-appointment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(197, 61, 67, 0.3);
+        }
+        
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            color: var(--kuro);
+            cursor: pointer;
+            padding: 0.5rem 0.8rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .nav-toggle:hover {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: var(--beni);
+        }
+        
+        /* Complete Fusion Hero Section */
+        .fusion-hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, 
+                rgba(245, 241, 232, 0.95) 0%,
+                rgba(232, 225, 211, 0.85) 100%);
+            padding-top: 150px;
+        }
+        
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.3;
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,20 Q40,10 60,20 T100,20" stroke="%23d4b483" fill="none" stroke-width="0.5" opacity="0.3"/></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%23c53d43" fill="none" stroke-width="0.3" opacity="0.2"/></svg>');
+            background-size: 200px, 300px;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 4rem 4rem;
+            text-align: center;
+        }
+        
+        .hero-title-container {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .vertical-title {
+            font-family: var(--font-body-japanese);
+            font-size: var(--text-7xl);
+            color: var(--shodo);
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 15px;
+            line-height: var(--leading-tight);
+            display: inline-block;
+            margin-right: 3rem;
+            position: relative;
+            font-weight: 500;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .vertical-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            right: 50%;
+            width: 1px;
+            height: 100px;
+            background: linear-gradient(to bottom, var(--beni), transparent);
+        }
+        
+        .horizontal-title {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-6xl);
+            color: var(--kuro);
+            font-weight: 500;
+            letter-spacing: var(--tracking-normal);
+            line-height: var(--leading-tight);
+            display: inline-block;
+            vertical-align: top;
+            text-align: left;
+            max-width: 800px;
+        }
+        
+        .title-accent {
+            color: var(--beni);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .title-accent::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--beni), var(--terracotta));
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: underlineExpand 1.5s ease-out 0.5s forwards;
+        }
+        
+        @keyframes underlineExpand {
+            to { transform: scaleX(1); }
+        }
+        
+        .hero-description {
+            font-family: var(--font-body-western);
+            font-size: var(--text-xl);
+            line-height: var(--leading-relaxed);
+            color: var(--shodo);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            position: relative;
+            padding: 2rem;
+            border-top: 1px solid rgba(212, 180, 131, 0.3);
+            border-bottom: 1px solid rgba(212, 180, 131, 0.3);
+            font-weight: 300;
+            letter-spacing: var(--tracking-normal);
+        }
+        
+        .hero-description::before {
+            content: '「';
+            position: absolute;
+            left: -1rem;
+            top: -1rem;
+            font-size: 4rem;
+            color: var(--gold-leaf);
+            font-family: var(--font-body-japanese);
+        }
+        
+        .hero-description::after {
+            content: '」';
+            position: absolute;
+            right: -1rem;
+            bottom: -1rem;
+            font-size: 4rem;
+            color: var(--gold-leaf);
+            font-family: var(--font-body-japanese);
+        }
+        
+        /* Complete Search Section */
+        .hero-search {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 
+                0 20px 60px rgba(45, 41, 38, 0.1),
+                inset 0 0 0 1px rgba(212, 180, 131, 0.2);
+            border: 1px solid rgba(212, 180, 131, 0.3);
+        }
+        
+        .search-title {
+            font-family: var(--font-heading-secondary);
+            font-size: var(--text-3xl);
+            color: var(--kuro);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: var(--tracking-normal);
+            line-height: var(--leading-tight);
+        }
+        
+        .search-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .search-input {
+            position: relative;
+        }
+        
+        .search-input i {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-leaf);
+            font-size: 1.2rem;
+        }
+        
+        .search-input input {
+            width: 100%;
+            padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: var(--text-base);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--shodo);
+            transition: all 0.3s ease;
+        }
+        
+        .search-input input:focus {
+            outline: none;
+            border-color: var(--beni);
+            box-shadow: 0 0 0 3px rgba(197, 61, 67, 0.1);
+        }
+        
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        .search-filters select {
+            padding: 1rem;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: var(--text-sm);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--shodo);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-filters select:focus {
+            outline: none;
+            border-color: var(--beni);
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, var(--beni), var(--terracotta));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: var(--text-lg);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            grid-column: 1 / -1;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(197, 61, 67, 0.3);
+        }
+        
+        .search-tags {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-tags span {
+            padding: 0.5rem 1rem;
+            background: rgba(212, 180, 131, 0.1);
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            border-radius: 20px;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 400;
+            letter-spacing: var(--tracking-wide);
+            color: var(--shodo);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-tags span:hover {
+            background: var(--beni);
+            color: white;
+            border-color: var(--beni);
+        }
+        
+        /* Complete 3D Architecture Section */
+        .immersive-section {
+            padding: 8rem 4rem;
+            background: var(--shikkui);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-title-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4rem;
+            gap: 2rem;
+        }
+        
+        .section-number {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-8xl);
+            color: var(--terracotta);
+            opacity: 0.3;
+            font-weight: 600;
+            line-height: var(--leading-tight);
+        }
+        
+        .section-title {
+            font-family: var(--font-heading-secondary);
+            font-size: var(--text-6xl);
+            color: var(--kuro);
+            position: relative;
+            padding-bottom: 1rem;
+            font-weight: 400;
+            line-height: var(--leading-tight);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--beni), var(--terracotta));
+        }
+        
+        .immersive-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            height: 700px;
+        }
+        
+        .architecture-model {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 
+                0 30px 80px rgba(45, 41, 38, 0.15),
+                inset 0 0 0 1px rgba(212, 180, 131, 0.3);
+            background: var(--washi);
+            position: relative;
+        }
+        
+        #fusion-model {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .model-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+        }
+        
+        .model-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            color: var(--kuro);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .model-btn:hover {
+            background: var(--beni);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .design-story {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(212, 180, 131, 0.2);
+            box-shadow: 0 20px 60px rgba(45, 41, 38, 0.08);
+        }
+        
+        .story-title {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-3xl);
+            color: var(--terracotta);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 2rem;
+            font-weight: 500;
+            line-height: var(--leading-snug);
+        }
+        
+        .story-title::before {
+            content: '🏯';
+            position: absolute;
+            left: 0;
+        }
+        
+        .story-text {
+            font-family: var(--font-body-western);
+            font-size: var(--text-lg);
+            line-height: var(--leading-relaxed);
+            color: var(--shodo);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            letter-spacing: var(--tracking-normal);
+        }
+        
+        .design-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(212, 180, 131, 0.1);
+            border-radius: 10px;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 400;
+        }
+        
+        .feature-item i {
+            color: var(--beni);
+        }
+        
+        /* Complete Interactive Map */
+        .fusion-map-section {
+            padding: 8rem 4rem;
+            background: var(--washi);
+            position: relative;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 800px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 
+                0 40px 100px rgba(45, 41, 38, 0.1),
+                inset 0 0 0 1px rgba(212, 180, 131, 0.3);
+            position: relative;
+            background: linear-gradient(135deg, #f5f1e8 0%, #e8e1d3 100%);
+        }
+        
+        #fusion-map-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            box-shadow: 0 10px 40px rgba(45, 41, 38, 0.1);
+        }
+        
+        .control-title {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-lg);
+            color: var(--kuro);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .control-buttons button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            color: var(--kuro);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-buttons button:hover {
+            background: var(--beni);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .map-legend {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            box-shadow: 0 10px 40px rgba(45, 41, 38, 0.1);
+            min-width: 200px;
+        }
+        
+        .legend-title {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-lg);
+            color: var(--kuro);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .legend-icon {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        
+        .legend-item span {
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 300;
+        }
+        
+        /* Complete Property Showcase */
+        .property-showcase {
+            padding: 8rem 4rem;
+            background: var(--shikkui);
+        }
+        
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .property-card {
+            background: var(--washi);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(45, 41, 38, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid rgba(212, 180, 131, 0.2);
+        }
+        
+        .property-card:hover {
+            transform: translateY(-20px);
+            box-shadow: 0 40px 80px rgba(45, 41, 38, 0.15);
+        }
+        
+        .property-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--beni), var(--terracotta));
+        }
+        
+        .property-image {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .property-badges {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .badge-jp, .badge-it {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+        
+        .badge-jp {
+            background: var(--beni);
+            color: white;
+        }
+        
+        .badge-it {
+            background: var(--terracotta);
+            color: white;
+        }
+        
+        .property-content {
+            padding: 2rem;
+        }
+        
+        .property-price {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-4xl);
+            color: var(--gold-leaf);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            line-height: var(--leading-tight);
+        }
+        
+        .property-name {
+            font-family: var(--font-heading-secondary);
+            font-size: var(--text-3xl);
+            color: var(--kuro);
+            margin-bottom: 1rem;
+            font-weight: 400;
+            line-height: var(--leading-snug);
+        }
+        
+        .property-desc {
+            font-family: var(--font-body-western);
+            font-size: var(--text-base);
+            line-height: var(--leading-normal);
+            color: var(--shodo);
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            letter-spacing: var(--tracking-normal);
+        }
+        
+        .property-features {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--stone-gray);
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 400;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .property-btn {
+            background: transparent;
+            border: 2px solid var(--gold-leaf);
+            color: var(--kuro);
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-family: inherit;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            letter-spacing: var(--tracking-wide);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .property-btn:hover {
+            background: var(--gold-leaf);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Enhanced Virtual Tour Section */
+        .virtual-tour-section {
+            padding: 8rem 4rem;
+            background: var(--washi);
+        }
+        
+        .tour-container {
+            margin-top: 4rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            height: 600px;
+        }
+        
+        .tour-viewer {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(45, 41, 38, 0.1);
+            background: #1a1a1a;
+            position: relative;
+        }
+        
+        #tour-scene {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .tour-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .tour-sidebar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            box-shadow: 0 10px 40px rgba(45, 41, 38, 0.08);
+        }
+        
+        .tour-info h4 {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-2xl);
+            color: var(--kuro);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            line-height: var(--leading-snug);
+        }
+        
+        .tour-info p {
+            font-family: var(--font-body-western);
+            font-size: var(--text-base);
+            line-height: var(--leading-normal);
+            color: var(--shodo);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+        
+        .tour-hotspots {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .hotspot-btn {
+            background: rgba(212, 180, 131, 0.1);
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: left;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 400;
+            letter-spacing: var(--tracking-wide);
+            color: var(--shodo);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .hotspot-btn:hover {
+            background: var(--beni);
+            color: white;
+            border-color: var(--beni);
+        }
+        
+        .hotspot-label {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            color: var(--kuro);
+            pointer-events: none;
+            transform: translate(-50%, -100%);
+            white-space: nowrap;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            z-index: 100;
+        }
+        
+        /* ===== ENQUIRY & APPOINTMENT FORM ===== */
+        .enquiry-section {
+            padding: 8rem 4rem;
+            background: linear-gradient(135deg, var(--washi) 0%, var(--shikkui) 100%);
+            position: relative;
+        }
+        
+        .enquiry-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+        
+        .enquiry-info {
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(212, 180, 131, 0.2);
+            box-shadow: 0 20px 60px rgba(45, 41, 38, 0.08);
+        }
+        
+        .enquiry-info h3 {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-3xl);
+            color: var(--terracotta);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .enquiry-info p {
+            font-family: var(--font-body-western);
+            font-size: var(--text-base);
+            line-height: var(--leading-relaxed);
+            color: var(--shodo);
+            margin-bottom: 2rem;
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(212, 180, 131, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+        }
+        
+        .contact-method i {
+            font-size: 1.5rem;
+            color: var(--beni);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .contact-method span {
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            color: var(--shodo);
+        }
+        
+        .enquiry-form-container {
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(212, 180, 131, 0.2);
+            box-shadow: 0 20px 60px rgba(45, 41, 38, 0.08);
+        }
+        
+        .enquiry-form h3 {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-3xl);
+            color: var(--terracotta);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            color: var(--shodo);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(212, 180, 131, 0.3);
+            border-radius: 12px;
+            font-family: var(--font-body-western);
+            font-size: var(--text-base);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--shodo);
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--beni);
+            box-shadow: 0 0 0 3px rgba(197, 61, 67, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--beni), var(--terracotta));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: var(--font-body-western);
+            font-size: var(--text-lg);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(197, 61, 67, 0.3);
+        }
+        
+        /* Appointment Modal */
+        .appointment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .appointment-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--washi);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(212, 180, 131, 0.3);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--kuro);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--beni);
+        }
+        
+        .modal-content h3 {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-3xl);
+            color: var(--terracotta);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        /* Floating Cultural Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+            transition: all 0.5s ease;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        
+        .floating-element:hover {
+            opacity: 0.3;
+            transform: scale(1.1);
+        }
+        
+        .lantern {
+            top: 20%;
+            left: 5%;
+            font-size: 3rem;
+            animation: floatLantern 20s ease-in-out infinite;
+        }
+        
+        .column {
+            top: 30%;
+            right: 10%;
+            font-size: 4rem;
+            animation: floatColumn 25s ease-in-out infinite;
+        }
+        
+        .cherry-blossom {
+            bottom: 20%;
+            left: 15%;
+            font-size: 2rem;
+            animation: floatBlossom 15s ease-in-out infinite;
+        }
+        
+        .fresco {
+            bottom: 30%;
+            right: 5%;
+            font-size: 3rem;
+            animation: floatFresco 30s ease-in-out infinite;
+        }
+        
+        @keyframes floatLantern {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-50px) rotate(10deg); }
+        }
+        
+        @keyframes floatColumn {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+        
+        @keyframes floatBlossom {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+        }
+        
+        @keyframes floatFresco {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            50% { transform: translateX(-40px) rotate(-5deg); }
+        }
+        
+        /* Complete Footer */
+        .fusion-footer {
+            background: var(--kuro);
+            color: var(--washi);
+            padding: 6rem 4rem 3rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-column h4 {
+            font-family: var(--font-heading-primary);
+            font-size: var(--text-xl);
+            color: var(--gold-leaf);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            line-height: var(--leading-snug);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-column h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--beni);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--shikkui);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 300;
+            letter-spacing: var(--tracking-normal);
+            line-height: var(--leading-relaxed);
+        }
+        
+        .footer-links a:hover {
+            color: var(--gold-leaf);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(212, 180, 131, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--washi);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--beni);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(212, 180, 131, 0.2);
+            color: var(--shikkui);
+            font-family: var(--font-body-western);
+            font-size: var(--text-sm);
+            font-weight: 300;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        /* ===== RESPONSIVE TYPOGRAPHY ADJUSTMENTS ===== */
+        @media (max-width: 1200px) {
+            .vertical-title {
+                font-size: var(--text-6xl);
+                letter-spacing: 12px;
+            }
+            
+            .horizontal-title {
+                font-size: var(--text-5xl);
+            }
+            
+            .section-title {
+                font-size: var(--text-5xl);
+            }
+            
+            .section-number {
+                font-size: var(--text-7xl);
+            }
+            
+            .enquiry-container {
+                gap: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            :root {
+                --text-8xl: 4.5rem;
+                --text-7xl: 3.75rem;
+                --text-6xl: 3rem;
+                --text-5xl: 2.25rem;
+                --text-4xl: 2rem;
+                --text-3xl: 1.75rem;
+                --text-2xl: 1.5rem;
+                --text-xl: 1.25rem;
+                --text-lg: 1.125rem;
+            }
+            
+            .fusion-nav {
+                top: 1rem;
+                width: 95%;
+                padding: 0.8rem 1.5rem;
+                border-radius: 15px;
+            }
+            
+            .fusion-nav.scrolled {
+                top: 0.5rem;
+                padding: 0.6rem 1.5rem;
+            }
+            
+            .nav-container {
+                width: 95%;
+                padding: 0 1.5rem;
+            }
+            
+            .nav-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(245, 241, 232, 0.2);
+                backdrop-filter: blur(30px) saturate(200%);
+                -webkit-backdrop-filter: blur(30px) saturate(200%);
+                padding: 1.5rem;
+                margin-top: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                box-shadow: 
+                    0 10px 30px rgba(45, 41, 38, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+                border: 1px solid rgba(212, 180, 131, 0.3);
+                border-radius: 15px;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .nav-item {
+                padding: 0.75rem;
+                text-align: center;
+                font-size: var(--text-base);
+                letter-spacing: var(--tracking-normal);
+            }
+            
+            .nav-appointment-btn {
+                margin: 1rem auto 0;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .fusion-hero {
+                padding-top: 120px;
+                min-height: calc(100vh - 80px);
+            }
+            
+            .hero-content {
+                padding: 1.5rem 1.5rem 3rem;
+            }
+            
+            .horizontal-title {
+                font-size: var(--text-3xl);
+                line-height: var(--leading-snug);
+            }
+            
+            .vertical-title {
+                writing-mode: horizontal-tb;
+                font-size: var(--text-4xl);
+                margin-right: 0;
+                margin-bottom: 2rem;
+                letter-spacing: 8px;
+                line-height: var(--leading-snug);
+            }
+            
+            .hero-description {
+                font-size: var(--text-lg);
+                line-height: var(--leading-normal);
+            }
+            
+            .hero-search {
+                padding: 1.5rem;
+            }
+            
+            .search-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .immersive-section,
+            .fusion-map-section,
+            .property-showcase,
+            .virtual-tour-section,
+            .enquiry-section,
+            .fusion-footer {
+                padding: 4rem 1.5rem;
+            }
+            
+            .immersive-container,
+            .tour-container,
+            .enquiry-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                gap: 2rem;
+            }
+            
+            .architecture-model,
+            .tour-viewer {
+                height: 400px;
+            }
+            
+            .model-controls,
+            .tour-controls,
+            .map-controls {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                right: auto;
+                transform: none;
+                justify-content: center;
+                margin-top: 1rem;
+                background: rgba(255, 255, 255, 0.95);
+            }
+            
+            .map-container {
+                height: 500px;
+            }
+            
+            .map-controls,
+            .map-legend {
+                position: relative;
+                top: auto;
+                bottom: auto;
+                left: auto;
+                right: auto;
+                margin: 1rem 0;
+                width: 100%;
+            }
+            
+            .property-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .property-card:hover {
+                transform: translateY(-10px);
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            .design-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: var(--text-4xl);
+            }
+            
+            .section-number {
+                font-size: var(--text-6xl);
+            }
+            
+            .story-title {
+                font-size: var(--text-2xl);
+            }
+            
+            .property-name {
+                font-size: var(--text-2xl);
+            }
+            
+            .property-price {
+                font-size: var(--text-3xl);
+            }
+            
+            .logo-kanji {
+                font-size: var(--text-3xl);
+            }
+            
+            .logo-text {
+                font-size: var(--text-xl);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Improve touch targets */
+            .model-btn,
+            .control-buttons button,
+            .hotspot-btn,
+            .property-btn,
+            .search-btn,
+            .nav-appointment-btn,
+            .submit-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .search-tags span {
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            :root {
+                --text-8xl: 3rem;
+                --text-7xl: 2.5rem;
+                --text-6xl: 2.25rem;
+                --text-5xl: 2rem;
+                --text-4xl: 1.75rem;
+                --text-3xl: 1.5rem;
+                --text-2xl: 1.25rem;
+                --text-xl: 1.125rem;
+                --text-lg: 1rem;
+            }
+            
+            .fusion-nav {
+                top: 0.8rem;
+                width: 94%;
+                padding: 0.6rem 1.2rem;
+                border-radius: 12px;
+            }
+            
+            .fusion-nav.scrolled {
+                top: 0.4rem;
+                padding: 0.5rem 1.2rem;
+            }
+            
+            .fusion-hero {
+                padding-top: 100px;
+                min-height: calc(100vh - 70px);
+            }
+            
+            .horizontal-title {
+                font-size: var(--text-2xl);
+            }
+            
+            .vertical-title {
+                font-size: var(--text-3xl);
+                letter-spacing: 6px;
+            }
+            
+            .section-title {
+                font-size: var(--text-3xl);
+            }
+            
+            .section-number {
+                font-size: var(--text-5xl);
+            }
+            
+            .hero-search,
+            .design-story,
+            .tour-sidebar,
+            .enquiry-info,
+            .enquiry-form-container {
+                padding: 1.5rem;
+            }
+            
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .property-name {
+                font-size: var(--text-xl);
+            }
+            
+            .property-price {
+                font-size: var(--text-2xl);
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .fusion-footer {
+                padding: 4rem 1.5rem 2rem;
+            }
+            
+            .loader-title {
+                font-size: var(--text-3xl);
+                letter-spacing: var(--tracking-wide);
+            }
+            
+            .vertical-title {
+                font-size: var(--text-3xl);
+                letter-spacing: 6px;
+            }
+            
+            .hero-description {
+                font-size: var(--text-base);
+                line-height: var(--leading-normal);
+            }
+            
+            .section-title {
+                font-size: var(--text-3xl);
+            }
+            
+            .search-title {
+                font-size: var(--text-2xl);
+            }
+            
+            .property-name {
+                font-size: var(--text-xl);
+            }
+            
+            .property-price {
+                font-size: var(--text-2xl);
+            }
+            
+            /* Optimize floating elements for mobile */
+            .floating-element {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .fusion-nav {
+                top: 0.5rem;
+                padding: 0.5rem 1rem;
+                border-radius: 10px;
+            }
+            
+            .horizontal-title {
+                font-size: 1.8rem;
+            }
+            
+            .vertical-title {
+                font-size: 1.5rem;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+            
+            .search-title {
+                font-size: 1.5rem;
+            }
+            
+            .property-features {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .floating-element,
+            .property-card,
+            .nav-item::after,
+            .search-btn,
+            .property-btn,
+            .nav-appointment-btn,
+            .submit-btn {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .floating-element {
+                animation: none;
+            }
+        }
+        
+        @media (max-height: 600px) and (orientation: landscape) {
+            .fusion-hero {
+                min-height: calc(120vh - 80px);
+            }
+            
+            .hero-title-container {
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-description {
+                margin-bottom: 1.5rem;
+            }
+            
+            .architecture-model,
+            .tour-viewer {
+                height: 300px;
+            }
+            
+            .modal-content {
+                max-height: 95vh;
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (min-resolution: 192dpi) {
+            .property-image {
+                background-image: -webkit-image-set(
+                    url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') 1x,
+                    url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=3900&q=80') 2x
+                );
+            }
+        }
+        
+        /* Enhanced Japanese font rendering */
+        .font-japanese {
+            font-feature-settings: "palt";
+            text-rendering: optimizeLegibility;
+        }
+        
+        /* Improve text selection */
+        ::selection {
+            background-color: var(--beni);
+            color: white;
+        }
+        
+        /* Better focus states for accessibility */
+        .nav-item:focus,
+        .search-btn:focus,
+        .property-btn:focus,
+        .nav-appointment-btn:focus,
+        .submit-btn:focus {
+            outline: 2px solid var(--beni);
+            outline-offset: 2px;
+        }
+        
+        /* Improve form text */
+        input, select, button {
+            font-family: inherit;
+            font-size: inherit;
+        }
+        
+        /* Improve contrast for better readability */
+        h1, h2, h3, h4, .section-title, .property-name {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Better paragraph spacing */
+        p, .story-text, .property-desc {
+            margin-bottom: 1.5em;
+            text-align: justify;
+            hyphens: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Premium Loader -->
+    <div class="premium-loader" id="loader">
+        <!-- Background particles -->
+        <div class="loader-particles">
+            <div class="loader-particle"></div>
+            <div class="loader-particle"></div>
+            <div class="loader-particle"></div>
+            <div class="loader-particle"></div>
+            <div class="loader-particle"></div>
+            <div class="loader-particle"></div>
+            <div class="loader-particle"></div>
+            <div class="loader-particle"></div>
+        </div>
+        
+        <!-- Main loader -->
+        <div class="loader-container">
+            <div class="loader-geometry">
+                <div class="geometry-line"></div>
+                <div class="geometry-circle"></div>
+                <div class="geometry-circle"></div>
+                <div class="geometry-circle"></div>
+                <div class="geometry-dot"></div>
+                <div class="geometry-dot"></div>
+                <div class="geometry-dot"></div>
+                <div class="geometry-dot"></div>
+                <div class="geometry-dot"></div>
+            </div>
+            
+            <div class="loader-text">
+                <h1 class="loader-title">VILLA SAKURA</h1>
+                <div class="loader-subtitle">East-West Fusion Residences</div>
+            </div>
+            
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <div class="status-dot"></div>
+                <div class="status-dot"></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+            
+            <div class="loader-action">
+                <button class="enter-btn" id="enterBtn">
+                    ENTER
+                    <span style="margin-left: 0.5rem; opacity: 0.6;">→</span>
+                </button>
+            </div>
+            
+            <div class="loader-copyright">
+                © 2024 VILLA SAKURA
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Website Content (initially hidden) -->
+    <div class="website-content" id="websiteContent">
+        <!-- Floating Cultural Elements -->
+        <div class="floating-elements">
+            <div class="floating-element lantern">🏮</div>
+            <div class="floating-element column">🏛️</div>
+            <div class="floating-element cherry-blossom">🌸</div>
+            <div class="floating-element fresco">🖼️</div>
+        </div>
+        
+        <!-- Appointment Booking Modal -->
+        <div class="appointment-modal" id="appointmentModal">
+            <div class="modal-content">
+                <button class="modal-close" id="closeModal">&times;</button>
+                <h3>Schedule Your Private Tour</h3>
+                <form id="appointmentForm" class="enquiry-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="modal-name">Full Name *</label>
+                            <input type="text" id="modal-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-email">Email *</label>
+                            <input type="email" id="modal-email" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="modal-phone">Phone *</label>
+                            <input type="tel" id="modal-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-property">Property Interest</label>
+                            <select id="modal-property">
+                                <option value="">Select Property</option>
+                                <option value="sakura-palazzo">Sakura Palazzo</option>
+                                <option value="zen-renaissance">Zen Renaissance Villa</option>
+                                <option value="chashitsu-loggia">Chashitsu Loggia</option>
+                                <option value="all">All Properties</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="modal-date">Preferred Date *</label>
+                            <input type="date" id="modal-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-time">Preferred Time *</label>
+                            <select id="modal-time" required>
+                                <option value="">Select Time</option>
+                                <option value="09:00">9:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-guests">Number of Guests</label>
+                        <select id="modal-guests">
+                            <option value="1">1 Person</option>
+                            <option value="2">2 People</option>
+                            <option value="3">3 People</option>
+                            <option value="4">4 People</option>
+                            <option value="5">5+ People</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-message">Additional Requests</label>
+                        <textarea id="modal-message" placeholder="Any specific areas you'd like to focus on during the tour..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-calendar-check"></i> Schedule Appointment
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Enhanced Fusion Navigation with Mobile Toggle -->
+        <nav class="fusion-nav">
+            <div class="nav-container">
+                <a href="#" class="nav-logo">
+                    <div class="logo-kanji">櫻</div>
+                    <div class="nav-divider"></div>
+                    <div class="logo-text">Villa Sakura</div>
+                </a>
+                
+                <button class="nav-toggle" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="nav-menu">
+                    <a href="#home" class="nav-item">庭園 Home</a>
+                    <a href="#immerse" class="nav-item">没入 Immerse</a>
+                    <a href="#residences" class="nav-item">邸宅 Residences</a>
+                    <a href="#tour" class="nav-item">案内 Tour</a>
+                    <a href="#enquiry" class="nav-item">連絡 Enquiry</a>
+                    <button class="nav-appointment-btn" id="openAppointmentBtn">
+                        <i class="fas fa-calendar-alt"></i> Book Appointment
+                    </button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Complete Fusion Hero Section -->
+        <section id="home" class="fusion-hero">
+            <div class="hero-background"></div>
+            
+            <div class="hero-content">
+                <div class="hero-title-container">
+                    <div class="vertical-title">和洋折衷</div>
+                    <h1 class="horizontal-title">
+                        Where <span class="title-accent">Japanese</span> Serenity<br>
+                        Meets <span class="title-accent">Italian</span> Grandeur
+                    </h1>
+                </div>
+                
+                <p class="hero-description">
+                    Experience the perfect harmony of East and West in our exclusive residences. 
+                    Traditional Japanese craftsmanship meets Renaissance elegance in a living space 
+                    that transcends cultural boundaries and redefines luxury living.
+                </p>
+                
+                <div class="hero-search">
+                    <h3 class="search-title">Find Your Fusion Residence</h3>
+                    <div class="search-container">
+                        <div class="search-input">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search properties by feature, type, or location...">
+                        </div>
+                        
+                        <div class="search-filters">
+                            <select>
+                                <option>Property Type</option>
+                                <option>Ryokan Villa</option>
+                                <option>Palazzo Suite</option>
+                                <option>Zen Garden Home</option>
+                                <option>Fusion Residence</option>
+                            </select>
+                            
+                            <select>
+                                <option>Bedrooms</option>
+                                <option>1-2 Bedrooms</option>
+                                <option>3-4 Bedrooms</option>
+                                <option>5+ Bedrooms</option>
+                            </select>
+                            
+                            <select>
+                                <option>Price Range</option>
+                                <option>$2M - $4M</option>
+                                <option>$4M - $8M</option>
+                                <option>$8M+</option>
+                            </select>
+                            
+                            <button class="search-btn">
+                                <i class="fas fa-arrow-right"></i>
+                                Discover Properties
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="search-tags">
+                        <span>Ocean View</span>
+                        <span>Private Garden</span>
+                        <span>Infinity Pool</span>
+                        <span>Spa Facilities</span>
+                        <span>Wine Cellar</span>
+                        <span>Smart Home</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Complete 3D Architecture Section -->
+        <section id="immerse" class="immersive-section">
+            <div class="section-title-wrapper">
+                <div class="section-number">01</div>
+                <h2 class="section-title">Architectural Fusion</h2>
+            </div>
+            
+            <div class="immersive-container">
+                <div class="architecture-model">
+                    <div id="fusion-model"></div>
+                    <div class="model-controls">
+                        <button class="model-btn" onclick="rotateModel('left')" aria-label="Rotate left">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="model-btn" onclick="rotateModel('right')" aria-label="Rotate right">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button class="model-btn" onclick="toggleAutoRotate()" aria-label="Auto rotate">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="model-btn" onclick="resetModel()" aria-label="Reset view">
+                            <i class="fas fa-home"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="design-story">
+                    <h3 class="story-title">The Art of Cultural Synthesis</h3>
+                    <p class="story-text">
+                        Our residences blend the minimalist philosophy of Japanese design with the 
+                        ornate beauty of Italian Renaissance architecture. Every detail is thoughtfully 
+                        curated to create a living experience that honors both traditions while creating 
+                        something entirely new.
+                    </p>
+                    
+                    <div class="design-features">
+                        <div class="feature-item">
+                            <i class="fas fa-mountain"></i>
+                            <span>Shakkei (借景) borrowed scenery</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-columns"></i>
+                            <span>Corinthian column details</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-water"></i>
+                            <span>Tsukubai water basins</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-palette"></i>
+                            <span>Fresco ceiling art</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-tree"></i>
+                            <span>Bonsai & Olive gardens</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-archway"></i>
+                            <span>Roman arches & Engawa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Complete Interactive Map Section -->
+        <section class="fusion-map-section">
+            <div class="section-title-wrapper">
+                <div class="section-number">02</div>
+                <h2 class="section-title">Cultural Landscape</h2>
+            </div>
+            
+            <div class="map-container">
+                <canvas id="fusion-map-canvas"></canvas>
+                
+                <div class="map-controls">
+                    <div class="control-title">Explore the Fusion</div>
+                    <div class="control-buttons">
+                        <button onclick="mapZoomIn()" aria-label="Zoom in">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button onclick="mapZoomOut()" aria-label="Zoom out">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button onclick="resetMap()" aria-label="Reset map">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="map-legend">
+                    <div class="legend-title">Cultural Elements</div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background: var(--beni);"></div>
+                        <span>Japanese Gardens</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background: var(--terracotta);"></div>
+                        <span>Italian Courtyards</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background: var(--gold-leaf);"></div>
+                        <span>Fusion Spaces</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background: var(--verdaccio);"></div>
+                        <span>Nature Trails</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Complete Property Showcase -->
+        <section id="residences" class="property-showcase">
+            <div class="section-title-wrapper">
+                <div class="section-number">03</div>
+                <h2 class="section-title">Signature Residences</h2>
+            </div>
+            
+            <div class="property-grid">
+                <div class="property-card">
+                    <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')">
+                        <div class="property-badges">
+                            <span class="badge-jp">和</span>
+                            <span class="badge-it">IT</span>
+                        </div>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">$3,800,000</div>
+                        <h3 class="property-name">Sakura Palazzo</h3>
+                        <p class="property-desc">
+                            Cherry blossom garden meets Venetian architecture in this 
+                            stunning fusion residence with panoramic ocean views.
+                        </p>
+                        <div class="property-features">
+                            <span><i class="fas fa-bed"></i> 4 Bedrooms</span>
+                            <span><i class="fas fa-bath"></i> 3.5 Bathrooms</span>
+                            <span><i class="fas fa-ruler-combined"></i> 3,200 sq ft</span>
+                        </div>
+                        <button class="property-btn">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')">
+                        <div class="property-badges">
+                            <span class="badge-jp">禅</span>
+                            <span class="badge-it">IT</span>
+                        </div>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">$5,200,000</div>
+                        <h3 class="property-name">Zen Renaissance Villa</h3>
+                        <p class="property-desc">
+                            Minimalist Zen principles integrated with Renaissance frescoes 
+                            and architectural details. Private meditation garden included.
+                        </p>
+                        <div class="property-features">
+                            <span><i class="fas fa-bed"></i> 5 Bedrooms</span>
+                            <span><i class="fas fa-bath"></i> 4.5 Bathrooms</span>
+                            <span><i class="fas fa-ruler-combined"></i> 4,500 sq ft</span>
+                        </div>
+                        <button class="property-btn">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')">
+                        <div class="property-badges">
+                            <span class="badge-jp">茶</span>
+                            <span class="badge-it">IT</span>
+                        </div>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">$2,900,000</div>
+                        <h3 class="property-name">Chashitsu Loggia</h3>
+                        <p class="property-desc">
+                            Traditional Japanese tea house combined with Italian loggia, 
+                            featuring hand-painted frescoes and tatami mat flooring.
+                        </p>
+                        <div class="property-features">
+                            <span><i class="fas fa-bed"></i> 3 Bedrooms</span>
+                            <span><i class="fas fa-bath"></i> 2.5 Bathrooms</span>
+                            <span><i class="fas fa-ruler-combined"></i> 2,400 sq ft</span>
+                        </div>
+                        <button class="property-btn">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Enhanced Virtual Tour Section with 360° Panoramas -->
+        <section id="tour" class="virtual-tour-section">
+            <div class="section-title-wrapper">
+                <div class="section-number">04</div>
+                <h2 class="section-title">Immersive Virtual Tour</h2>
+            </div>
+            
+            <div class="tour-container">
+                <div class="tour-viewer">
+                    <div id="tour-scene"></div>
+                    <div class="tour-controls">
+                        <button class="model-btn" onclick="tourMove('forward')" aria-label="Move forward">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <button class="model-btn" onclick="tourMove('left')" aria-label="Move left">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <button class="model-btn" onclick="tourMove('right')" aria-label="Move right">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button class="model-btn" onclick="tourMove('back')" aria-label="Move back">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tour-sidebar">
+                    <div class="tour-info">
+                        <h4>Interactive 360° Experience</h4>
+                        <p>
+                            Explore our signature fusion residence in full 360° panoramas. 
+                            Click on hotspots within the tour to move between rooms and 
+                            experience the perfect blend of Japanese minimalism and Italian elegance.
+                        </p>
+                    </div>
+                    
+                    <div class="tour-hotspots">
+                        <button class="hotspot-btn" onclick="tourToLocation('entrance')">
+                            <i class="fas fa-door-open"></i> Main Entrance
+                        </button>
+                        <button class="hotspot-btn" onclick="tourToLocation('garden')">
+                            <i class="fas fa-tree"></i> Fusion Garden
+                        </button>
+                        <button class="hotspot-btn" onclick="tourToLocation('living')">
+                            <i class="fas fa-couch"></i> Living Room
+                        </button>
+                        <button class="hotspot-btn" onclick="tourToLocation('kitchen')">
+                            <i class="fas fa-utensils"></i> Italian Kitchen
+                        </button>
+                        <button class="hotspot-btn" onclick="tourToLocation('bedroom')">
+                            <i class="fas fa-bed"></i> Master Suite
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Complete Enquiry & Appointment Section -->
+        <section id="enquiry" class="enquiry-section">
+            <div class="section-title-wrapper">
+                <div class="section-number">05</div>
+                <h2 class="section-title">Schedule Your Visit</h2>
+            </div>
+            
+            <div class="enquiry-container">
+                <div class="enquiry-info">
+                    <h3>Personalized Consultation</h3>
+                    <p>
+                        Experience Villa Sakura firsthand with a private tour guided by our 
+                        fusion architecture specialists. Our team will help you discover the 
+                        perfect blend of Japanese tranquility and Italian grandeur that suits 
+                        your lifestyle.
+                    </p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@villasakura.com</span>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-clock"></i>
+                            <span>Mon-Sat: 9:00 AM - 7:00 PM</span>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Fusion Avenue, Kyoto-Italia District</span>
+                        </div>
+                    </div>
+                    
+                    <button class="submit-btn" id="openEnquiryModal" style="margin-top: 2rem;">
+                        <i class="fas fa-calendar-alt"></i> Book Private Tour
+                    </button>
+                </div>
+                
+                <div class="enquiry-form-container">
+                    <form id="enquiryForm" class="enquiry-form">
+                        <h3>Send an Enquiry</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Full Name *</label>
+                                <input type="text" id="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <select id="country">
+                                    <option value="">Select Country</option>
+                                    <option value="us">United States</option>
+                                    <option value="jp">Japan</option>
+                                    <option value="it">Italy</option>
+                                    <option value="uk">United Kingdom</option>
+                                    <option value="ca">Canada</option>
+                                    <option value="au">Australia</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="interest">Primary Interest</label>
+                            <select id="interest">
+                                <option value="">Select Interest</option>
+                                <option value="investment">Investment Opportunity</option>
+                                <option value="residence">Primary Residence</option>
+                                <option value="vacation">Vacation Home</option>
+                                <option value="partnership">Business Partnership</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="properties">Properties of Interest</label>
+                            <select id="properties" multiple>
+                                <option value="sakura-palazzo">Sakura Palazzo</option>
+                                <option value="zen-renaissance">Zen Renaissance Villa</option>
+                                <option value="chashitsu-loggia">Chashitsu Loggia</option>
+                                <option value="all">All Properties</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="budget">Budget Range</label>
+                            <select id="budget">
+                                <option value="">Select Budget</option>
+                                <option value="2-4">$2M - $4M</option>
+                                <option value="4-8">$4M - $8M</option>
+                                <option value="8+">$8M+</option>
+                                <option value="undecided">Undecided</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" placeholder="Tell us about your vision, requirements, and any specific questions..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Send Enquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Complete Footer -->
+        <footer id="contact" class="fusion-footer">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>Villa Sakura</h4>
+                    <p style="color: var(--shikkui); line-height: 1.6; font-size: 0.9rem;">
+                        Where Eastern tranquility meets Western grandeur in perfect harmony.
+                        Experience luxury redefined.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Pinterest">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Properties</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Sakura Palazzo</a></li>
+                        <li><a href="#">Zen Renaissance</a></li>
+                        <li><a href="#">Chashitsu Loggia</a></li>
+                        <li><a href="#">Fusion Residences</a></li>
+                        <li><a href="#">New Developments</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Experience</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Virtual Tours</a></li>
+                        <li><a href="#">Architectural Design</a></li>
+                        <li><a href="#">Cultural Events</a></li>
+                        <li><a href="#">Wellness Programs</a></li>
+                        <li><a href="#">Culinary Experiences</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="#enquiry">Schedule a Tour</a></li>
+                        <li><a href="#enquiry">Investment Inquiries</a></li>
+                        <li><a href="#enquiry">Partnerships</a></li>
+                        <li><a href="#enquiry">Press & Media</a></li>
+                        <li><a href="#enquiry">Careers</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 Villa Sakura | East-West Fusion Residences. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+                    和洋折衷 - Harmony of Japanese and Italian Cultures
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ===== LOADER FUNCTIONALITY =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const loader = document.getElementById('loader');
+            const websiteContent = document.getElementById('websiteContent');
+            const enterBtn = document.getElementById('enterBtn');
+            const progressFill = document.querySelector('.progress-fill');
+            
+            let progress = 0;
+            let progressInterval;
+            
+            // Simulate loading progress
+            function simulateProgress() {
+                progressInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += Math.random() * 20;
+                        if (progress > 100) progress = 100;
+                        
+                        progressFill.style.width = progress + '%';
+                        
+                        // Auto-enter when progress reaches 100%
+                        if (progress >= 100) {
+                            clearInterval(progressInterval);
+                            setTimeout(enterWebsite, 500);
+                        }
+                    }
+                }, 300);
+            }
+            
+            // Enter website function
+            function enterWebsite() {
+                // Fade out loader
+                loader.classList.add('loader-complete');
+                
+                // Show website content after delay
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    websiteContent.style.display = 'block';
+                    
+                    // Add entrance animation to content
+                    setTimeout(() => {
+                        websiteContent.classList.add('visible');
+                        // Initialize main website
+                        initializeMainWebsite();
+                    }, 100);
+                }, 800);
+            }
+            
+            // Manual enter button
+            enterBtn.addEventListener('click', function() {
+                clearInterval(progressInterval);
+                progressFill.style.width = '100%';
+                progressFill.style.animation = 'none';
+                
+                // Button feedback
+                this.style.opacity = '0.5';
+                setTimeout(() => {
+                    enterWebsite();
+                }, 300);
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    enterBtn.click();
+                }
+                
+                if (e.key === 'Escape') {
+                    enterWebsite();
+                }
+            });
+            
+            // Start progress simulation
+            setTimeout(simulateProgress, 1000);
+            
+            // Auto-enter after 5 seconds as fallback
+            setTimeout(() => {
+                if (progress < 100) {
+                    clearInterval(progressInterval);
+                    enterWebsite();
+                }
+            }, 5000);
+        });
+        
+        // ===== MAIN WEBSITE FUNCTIONALITY =====
+        function initializeMainWebsite() {
+            // Initialize GSAP animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Appointment Modal Functionality
+            const appointmentModal = document.getElementById('appointmentModal');
+            const openAppointmentBtn = document.getElementById('openAppointmentBtn');
+            const openEnquiryModal = document.getElementById('openEnquiryModal');
+            const closeModal = document.getElementById('closeModal');
+            
+            // Open modal from navigation button
+            if (openAppointmentBtn) {
+                openAppointmentBtn.addEventListener('click', () => {
+                    appointmentModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            
+            // Open modal from enquiry section
+            if (openEnquiryModal) {
+                openEnquiryModal.addEventListener('click', () => {
+                    appointmentModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            
+            // Close modal
+            if (closeModal) {
+                closeModal.addEventListener('click', () => {
+                    appointmentModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+            
+            // Close modal when clicking outside
+            appointmentModal.addEventListener('click', (e) => {
+                if (e.target === appointmentModal) {
+                    appointmentModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && appointmentModal.classList.contains('active')) {
+                    appointmentModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Form submission handling
+            const appointmentForm = document.getElementById('appointmentForm');
+            const enquiryForm = document.getElementById('enquiryForm');
+            
+            if (appointmentForm) {
+                appointmentForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(appointmentForm);
+                    const data = Object.fromEntries(formData);
+                    
+                    // Here you would typically send data to a server
+                    console.log('Appointment form submitted:', data);
+                    
+                    // Show success message
+                    alert('Thank you! Your appointment request has been submitted. Our team will contact you within 24 hours to confirm.');
+                    
+                    // Reset form and close modal
+                    appointmentForm.reset();
+                    appointmentModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+            
+            if (enquiryForm) {
+                enquiryForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(enquiryForm);
+                    const data = Object.fromEntries(formData);
+                    
+                    // Here you would typically send data to a server
+                    console.log('Enquiry form submitted:', data);
+                    
+                    // Show success message
+                    alert('Thank you for your enquiry! Our specialists will contact you within 48 hours.');
+                    
+                    // Reset form
+                    enquiryForm.reset();
+                });
+            }
+            
+            // Mobile Navigation Toggle
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    navToggle.innerHTML = navMenu.classList.contains('active') 
+                        ? '<i class="fas fa-times"></i>' 
+                        : '<i class="fas fa-bars"></i>';
+                });
+                
+                // Close menu when clicking a link
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    });
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+                        navMenu.classList.remove('active');
+                        navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            }
+            
+            // Navigation scroll effect with updated threshold
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('.fusion-nav');
+                if (nav) {
+                    if (window.scrollY > 20) {
+                        nav.classList.add('scrolled');
+                    } else {
+                        nav.classList.remove('scrolled');
+                    }
+                }
+            });
+            
+            // Animate hero elements (starting from below nav)
+            gsap.from('.vertical-title', {
+                duration: 1.5,
+                y: 50,
+                opacity: 0,
+                ease: 'power3.out',
+                delay: 0.2
+            });
+            
+            gsap.from('.horizontal-title', {
+                duration: 1.5,
+                y: 50,
+                opacity: 0,
+                delay: 0.4,
+                ease: 'power3.out'
+            });
+            
+            gsap.from('.hero-description', {
+                duration: 1.5,
+                y: 50,
+                opacity: 0,
+                delay: 0.6,
+                ease: 'power3.out'
+            });
+            
+            gsap.from('.hero-search', {
+                duration: 1.5,
+                y: 50,
+                opacity: 0,
+                delay: 0.8,
+                ease: 'power3.out'
+            });
+            
+            // Animate floating elements with anime.js
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                anime({
+                    targets: '.floating-element',
+                    translateY: function() {
+                        return anime.random(-30, 30);
+                    },
+                    translateX: function() {
+                        return anime.random(-20, 20);
+                    },
+                    rotate: function() {
+                        return anime.random(-5, 5);
+                    },
+                    duration: 3000,
+                    direction: 'alternate',
+                    loop: true,
+                    easing: 'easeInOutSine',
+                    delay: anime.stagger(100)
+                });
+            }
+            
+            // Scroll animations for sections
+            gsap.utils.toArray('section').forEach((section, i) => {
+                if (i > 0) {
+                    gsap.from(section, {
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top 80%',
+                            toggleActions: 'play none none reverse'
+                        },
+                        y: 50,
+                        opacity: 0,
+                        duration: 1,
+                        ease: 'power3.out'
+                    });
+                }
+            });
+            
+            // Complete 3D Fusion Architecture Model
+            class CompleteFusionModel {
+                constructor() {
+                    this.container = document.getElementById('fusion-model');
+                    if (!this.container) return;
+                    
+                    // Check for mobile device
+                    this.isMobile = window.innerWidth <= 768;
+                    
+                    // Scene setup
+                    this.scene = new THREE.Scene();
+                    this.scene.background = new THREE.Color(0xf5f1e8);
+                    
+                    // Optimized camera for mobile
+                    this.camera = new THREE.PerspectiveCamera(
+                        this.isMobile ? 55 : 45,
+                        this.container.clientWidth / this.container.clientHeight,
+                        0.1,
+                        1000
+                    );
+                    this.camera.position.set(this.isMobile ? 12 : 15, this.isMobile ? 10 : 12, this.isMobile ? 20 : 25);
+                    
+                    // Optimized renderer for mobile
+                    this.renderer = new THREE.WebGLRenderer({ 
+                        antialias: !this.isMobile,
+                        alpha: true,
+                        powerPreference: this.isMobile ? "low-power" : "high-performance"
+                    });
+                    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.isMobile ? 1 : 2));
+                    this.renderer.shadowMap.enabled = !this.isMobile;
+                    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                    this.container.appendChild(this.renderer.domElement);
+                    
+                    // Optimized lighting for mobile
+                    this.setupCompleteLighting();
+                    
+                    // Create optimized building
+                    this.createCompleteBuilding();
+                    this.createDetailedGarden();
+                    this.createCulturalElements();
+                    
+                    // Optimized controls for mobile
+                    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                    this.controls.enableDamping = true;
+                    this.controls.dampingFactor = 0.05;
+                    this.controls.autoRotate = false;
+                    this.controls.minDistance = this.isMobile ? 8 : 10;
+                    this.controls.maxDistance = this.isMobile ? 40 : 50;
+                    this.controls.enableZoom = true;
+                    this.controls.enablePan = !this.isMobile;
+                    
+                    // Animation loop
+                    this.animate();
+                    
+                    // Handle resize
+                    window.addEventListener('resize', () => this.onResize());
+                    
+                    // State
+                    this.autoRotate = false;
+                    this.modelRotation = 0;
+                }
+                
+                setupCompleteLighting() {
+                    // Ambient light
+                    const ambientLight = new THREE.AmbientLight(0xffffff, this.isMobile ? 0.8 : 0.6);
+                    this.scene.add(ambientLight);
+                    
+                    if (!this.isMobile) {
+                        // Main directional light (sun)
+                        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                        directionalLight.position.set(20, 30, 20);
+                        directionalLight.castShadow = true;
+                        directionalLight.shadow.mapSize.width = 1024;
+                        directionalLight.shadow.mapSize.height = 1024;
+                        directionalLight.shadow.camera.near = 0.5;
+                        directionalLight.shadow.camera.far = 100;
+                        this.scene.add(directionalLight);
+                        
+                        // Hemisphere light for natural outdoor feel
+                        const hemisphereLight = new THREE.HemisphereLight(0x87CEEB, 0x8B4513, 0.4);
+                        this.scene.add(hemisphereLight);
+                    }
+                    
+                    // Point lights for interior illumination
+                    const pointLight1 = new THREE.PointLight(0xffe6b3, this.isMobile ? 0.3 : 0.5, 20);
+                    pointLight1.position.set(5, 8, 5);
+                    this.scene.add(pointLight1);
+                }
+                
+                createCompleteBuilding() {
+                    this.buildingGroup = new THREE.Group();
+                    
+                    // Japanese style foundation with stone base
+                    const foundationGeometry = new THREE.BoxGeometry(12, 1, 10);
+                    const foundationMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0x8B4513,
+                        roughness: 0.8
+                    });
+                    const foundation = new THREE.Mesh(foundationGeometry, foundationMaterial);
+                    foundation.position.y = 0.5;
+                    if (!this.isMobile) {
+                        foundation.castShadow = true;
+                    }
+                    foundation.receiveShadow = true;
+                    this.buildingGroup.add(foundation);
+                    
+                    // Main Japanese structure with optimized geometry
+                    const segments = this.isMobile ? 4 : 8;
+                    const mainGeometry = new THREE.BoxGeometry(10, 8, 8, segments, segments, segments);
+                    const mainMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xf5f1e8,
+                        roughness: 0.3,
+                        metalness: 0.1
+                    });
+                    const mainBuilding = new THREE.Mesh(mainGeometry, mainMaterial);
+                    mainBuilding.position.y = 5;
+                    if (!this.isMobile) {
+                        mainBuilding.castShadow = true;
+                    }
+                    mainBuilding.receiveShadow = true;
+                    this.buildingGroup.add(mainBuilding);
+                    
+                    // Italian columns around the building
+                    const columnGeometry = new THREE.CylinderGeometry(0.4, 0.5, 6, this.isMobile ? 8 : 16);
+                    const columnMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xd4b483,
+                        roughness: 0.4,
+                        metalness: 0.3
+                    });
+                    
+                    const columnCount = this.isMobile ? 6 : 8;
+                    for (let i = 0; i < columnCount; i++) {
+                        const column = new THREE.Mesh(columnGeometry, columnMaterial);
+                        const angle = (i / columnCount) * Math.PI * 2;
+                        const radius = 6;
+                        
+                        column.position.x = Math.cos(angle) * radius;
+                        column.position.z = Math.sin(angle) * radius;
+                        column.position.y = 3;
+                        if (!this.isMobile) {
+                            column.castShadow = true;
+                        }
+                        this.buildingGroup.add(column);
+                    }
+                    
+                    // Japanese curved roof with Italian terracotta tiles
+                    const roofGeometry = new THREE.ConeGeometry(7, 3, this.isMobile ? 6 : 8);
+                    const roofMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xb3543a,
+                        roughness: 0.7
+                    });
+                    const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+                    roof.position.y = 11.5;
+                    roof.rotation.y = Math.PI / 8;
+                    if (!this.isMobile) {
+                        roof.castShadow = true;
+                    }
+                    this.buildingGroup.add(roof);
+                    
+                    // Italian balcony with Japanese railings
+                    const balconyGeometry = new THREE.TorusGeometry(5, 0.5, 8, 32, Math.PI * 2);
+                    const balconyMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xd4b483,
+                        roughness: 0.5
+                    });
+                    const balcony = new THREE.Mesh(balconyGeometry, balconyMaterial);
+                    balcony.position.y = 8;
+                    balcony.rotation.x = Math.PI / 2;
+                    if (!this.isMobile) {
+                        balcony.castShadow = true;
+                    }
+                    this.buildingGroup.add(balcony);
+                    
+                    this.scene.add(this.buildingGroup);
+                }
+                
+                createDetailedGarden() {
+                    // Japanese rock garden (kare-sansui)
+                    const sandGeometry = new THREE.PlaneGeometry(40, 40, this.isMobile ? 10 : 20, this.isMobile ? 10 : 20);
+                    const sandMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xf5f1e8,
+                        roughness: 0.9
+                    });
+                    const sand = new THREE.Mesh(sandGeometry, sandMaterial);
+                    sand.rotation.x = -Math.PI / 2;
+                    sand.position.y = 0.1;
+                    sand.receiveShadow = true;
+                    this.scene.add(sand);
+                    
+                    // Add rocks to the garden
+                    const rockGeometry = new THREE.DodecahedronGeometry(0.8, this.isMobile ? 0 : 1);
+                    const rockMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0x666666,
+                        roughness: 0.8
+                    });
+                    
+                    const rockCount = this.isMobile ? 4 : 6;
+                    const rockPositions = [
+                        { x: 8, z: 8 },
+                        { x: -8, z: 6 },
+                        { x: 6, z: -8 },
+                        { x: -6, z: -6 },
+                        { x: 10, z: 0 },
+                        { x: -10, z: 0 }
+                    ].slice(0, rockCount);
+                    
+                    rockPositions.forEach(pos => {
+                        const rock = new THREE.Mesh(rockGeometry, rockMaterial);
+                        rock.position.set(pos.x, 0.8, pos.z);
+                        rock.scale.set(
+                            1 + Math.random() * 0.5,
+                            1 + Math.random() * 0.5,
+                            1 + Math.random() * 0.5
+                        );
+                        if (!this.isMobile) {
+                            rock.castShadow = true;
+                        }
+                        this.scene.add(rock);
+                    });
+                    
+                    // Italian fountain in center
+                    const fountainBaseGeometry = new THREE.CylinderGeometry(1.5, 2, 0.5, this.isMobile ? 8 : 16);
+                    const fountainBaseMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xb3543a,
+                        roughness: 0.4
+                    });
+                    const fountainBase = new THREE.Mesh(fountainBaseGeometry, fountainBaseMaterial);
+                    fountainBase.position.y = 0.25;
+                    if (!this.isMobile) {
+                        fountainBase.castShadow = true;
+                    }
+                    this.scene.add(fountainBase);
+                    
+                    // Cherry blossom trees around
+                    const treeCount = this.isMobile ? 6 : 10;
+                    for (let i = 0; i < treeCount; i++) {
+                        this.createCherryBlossom(
+                            Math.cos((i / treeCount) * Math.PI * 2) * 15,
+                            Math.sin((i / treeCount) * Math.PI * 2) * 15
+                        );
+                    }
+                }
+                
+                createCherryBlossom(x, z) {
+                    const treeGroup = new THREE.Group();
+                    
+                    // Trunk
+                    const trunkGeometry = new THREE.CylinderGeometry(0.3, 0.4, 4, this.isMobile ? 4 : 8);
+                    const trunkMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0x8B4513,
+                        roughness: 0.8
+                    });
+                    const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                    treeGroup.add(trunk);
+                    
+                    // Blossoms (optimized for mobile)
+                    const blossomCount = this.isMobile ? 2 : 3;
+                    const blossomGeometry = new THREE.SphereGeometry(2, this.isMobile ? 4 : 8, this.isMobile ? 4 : 8);
+                    const blossomMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xffb7c5,
+                        transparent: true,
+                        opacity: 0.6
+                    });
+                    
+                    for (let i = 0; i < blossomCount; i++) {
+                        const blossoms = new THREE.Mesh(blossomGeometry, blossomMaterial);
+                        blossoms.position.y = 3 + i * 1.5;
+                        blossoms.scale.set(
+                            0.8 + Math.random() * 0.4,
+                            0.8 + Math.random() * 0.4,
+                            0.8 + Math.random() * 0.4
+                        );
+                        treeGroup.add(blossoms);
+                    }
+                    
+                    treeGroup.position.set(x, 0, z);
+                    treeGroup.userData = { isTree: true, type: 'cherry', speed: 0.5 + Math.random() * 0.5 };
+                    if (!this.isMobile) {
+                        treeGroup.castShadow = true;
+                    }
+                    this.scene.add(treeGroup);
+                }
+                
+                createCulturalElements() {
+                    // Japanese stone lantern
+                    const lanternGroup = new THREE.Group();
+                    
+                    const baseGeometry = new THREE.BoxGeometry(1, 0.5, 1);
+                    const baseMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0x666666,
+                        roughness: 0.8
+                    });
+                    const base = new THREE.Mesh(baseGeometry, baseMaterial);
+                    lanternGroup.add(base);
+                    
+                    const postGeometry = new THREE.CylinderGeometry(0.2, 0.3, 2, this.isMobile ? 4 : 8);
+                    const postMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0x8B4513,
+                        roughness: 0.7
+                    });
+                    const post = new THREE.Mesh(postGeometry, postMaterial);
+                    post.position.y = 1.25;
+                    lanternGroup.add(post);
+                    
+                    lanternGroup.position.set(12, 0, 12);
+                    this.scene.add(lanternGroup);
+                }
+                
+                animate() {
+                    requestAnimationFrame(() => this.animate());
+                    
+                    // Animate trees
+                    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        this.scene.children.forEach(child => {
+                            if (child.userData?.isTree) {
+                                if (child.userData.type === 'cherry') {
+                                    const time = Date.now() * 0.001;
+                                    child.rotation.y = Math.sin(time * child.userData.speed) * 0.1;
+                                    child.children.forEach((blossom, i) => {
+                                        if (i > 0) {
+                                            blossom.scale.y = 1 + Math.sin(time * 2 + i) * 0.1;
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Auto-rotate if enabled
+                    if (this.autoRotate && this.buildingGroup) {
+                        this.buildingGroup.rotation.y += 0.002;
+                        this.modelRotation = this.buildingGroup.rotation.y;
+                    }
+                    
+                    this.controls.update();
+                    this.renderer.render(this.scene, this.camera);
+                }
+                
+                onResize() {
+                    this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                }
+                
+                rotate(direction) {
+                    if (this.buildingGroup) {
+                        const amount = direction === 'left' ? 0.1 : -0.1;
+                        this.buildingGroup.rotation.y += amount;
+                        this.modelRotation = this.buildingGroup.rotation.y;
+                    }
+                }
+                
+                toggleAutoRotate() {
+                    this.autoRotate = !this.autoRotate;
+                    this.controls.autoRotate = this.autoRotate;
+                }
+                
+                reset() {
+                    if (this.buildingGroup) {
+                        this.buildingGroup.rotation.y = 0;
+                        this.modelRotation = 0;
+                    }
+                    this.controls.reset();
+                    this.camera.position.set(this.isMobile ? 12 : 15, this.isMobile ? 10 : 12, this.isMobile ? 20 : 25);
+                }
+            }
+            
+            // Enhanced Virtual Tour with 360° Panoramas
+            class EnhancedVirtualTour {
+                constructor() {
+                    this.container = document.getElementById('tour-scene');
+                    if (!this.container) return;
+                    
+                    // Check for mobile device
+                    this.isMobile = window.innerWidth <= 768;
+                    this.isTablet = window.innerWidth <= 1024;
+                    
+                    // Scene setup
+                    this.scene = new THREE.Scene();
+                    this.scene.background = new THREE.Color(0x1a1a1a);
+                    
+                    // Camera setup optimized for device
+                    this.camera = new THREE.PerspectiveCamera(
+                        this.isMobile ? 70 : 75,
+                        this.container.clientWidth / this.container.clientHeight,
+                        0.1,
+                        1000
+                    );
+                    this.camera.position.set(0, 1.6, 0);
+                    
+                    // Renderer optimized for device
+                    this.renderer = new THREE.WebGLRenderer({ 
+                        antialias: !this.isMobile,
+                        alpha: true,
+                        powerPreference: this.isMobile ? "low-power" : "high-performance"
+                    });
+                    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.isMobile ? 1 : 2));
+                    this.container.appendChild(this.renderer.domElement);
+                    
+                    // Tour state
+                    this.currentPanorama = null;
+                    this.panoramas = {};
+                    this.hotspots = [];
+                    this.isTransitioning = false;
+                    
+                    // Load panoramas
+                    this.loadPanoramas();
+                    
+                    // Setup controls
+                    this.setupControls();
+                    
+                    // Initial panorama
+                    this.loadPanorama('entrance');
+                    
+                    // Animation loop
+                    this.animate();
+                    
+                    // Handle resize
+                    window.addEventListener('resize', () => this.onResize());
+                    
+                    // Touch events for mobile
+                    if (this.isMobile) {
+                        this.setupTouchControls();
+                    }
+                }
+                
+                loadPanoramas() {
+                    // Define panorama locations with 360° image URLs
+                    // Note: Replace with actual 360° image URLs
+                    this.panoramas = {
+                        'entrance': {
+                            texture: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+                            hotspots: [
+                                { position: new THREE.Vector3(0, 0, -5), target: 'garden', label: 'Go to Garden' },
+                                { position: new THREE.Vector3(-3, 0, -4), target: 'living', label: 'Enter Living Room' }
+                            ],
+                            info: {
+                                title: 'Grand Foyer',
+                                description: 'A fusion entrance with Italian marble floors and Japanese shoji screen accents.'
+                            }
+                        },
+                        'garden': {
+                            texture: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+                            hotspots: [
+                                { position: new THREE.Vector3(0, 0, -5), target: 'entrance', label: 'Enter Villa' },
+                                { position: new THREE.Vector3(2, 0, -4), target: 'living', label: 'Go to Living Room' }
+                            ],
+                            info: {
+                                title: 'Fusion Garden',
+                                description: 'Cherry blossoms meet olive trees in this serene East-West garden space.'
+                            }
+                        },
+                        'living': {
+                            texture: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+                            hotspots: [
+                                { position: new THREE.Vector3(0, 0, -4), target: 'entrance', label: 'Go to Entrance' },
+                                { position: new THREE.Vector3(3, 0, -3), target: 'kitchen', label: 'Enter Kitchen' },
+                                { position: new THREE.Vector3(-2, 0, -3), target: 'bedroom', label: 'Go to Bedroom' }
+                            ],
+                            info: {
+                                title: 'Main Living Area',
+                                description: 'Tatami mats and Renaissance frescoes blend seamlessly in this living space.'
+                            }
+                        },
+                        'kitchen': {
+                            texture: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+                            hotspots: [
+                                { position: new THREE.Vector3(0, 0, -4), target: 'living', label: 'Return to Living Room' }
+                            ],
+                            info: {
+                                title: 'Italian Kitchen',
+                                description: 'Modern Italian kitchen with Japanese minimalist design principles.'
+                            }
+                        },
+                        'bedroom': {
+                            texture: 'https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+                            hotspots: [
+                                { position: new THREE.Vector3(0, 0, -4), target: 'living', label: 'Return to Living Room' }
+                            ],
+                            info: {
+                                title: 'Master Suite',
+                                description: 'Fusion bedroom with Italian canopy bed and Japanese shōji dividers.'
+                            }
+                        }
+                    };
+                }
+                
+                loadPanorama(panoramaId) {
+                    if (this.isTransitioning || !this.panoramas[panoramaId]) return;
+                    
+                    this.isTransitioning = true;
+                    
+                    // Clear existing panorama and hotspots
+                    if (this.currentPanorama) {
+                        this.scene.remove(this.currentPanorama);
+                    }
+                    this.hotspots.forEach(hotspot => this.scene.remove(hotspot));
+                    this.hotspots = [];
+                    
+                    // Load new panorama texture
+                    const textureLoader = new THREE.TextureLoader();
+                    const panoramaData = this.panoramas[panoramaId];
+                    
+                    textureLoader.load(panoramaData.texture, (texture) => {
+                        // Create sphere for 360° panorama
+                        const geometry = new THREE.SphereGeometry(50, 60, 40);
+                        
+                        // Flip the sphere inside out
+                        geometry.scale(-1, 1, 1);
+                        
+                        const material = new THREE.MeshBasicMaterial({
+                            map: texture,
+                            side: THREE.BackSide
+                        });
+                        
+                        this.currentPanorama = new THREE.Mesh(geometry, material);
+                        this.scene.add(this.currentPanorama);
+                        
+                        // Add hotspots
+                        panoramaData.hotspots.forEach(hotspotData => {
+                            this.addHotspot(hotspotData.position, hotspotData.label, hotspotData.target);
+                        });
+                        
+                        // Update tour info
+                        this.updateTourInfo(panoramaData.info);
+                        
+                        this.isTransitioning = false;
+                    });
+                }
+                
+                addHotspot(position, label, target) {
+                    // Create hotspot geometry
+                    const geometry = new THREE.SphereGeometry(0.5, 16, 16);
+                    const material = new THREE.MeshBasicMaterial({ 
+                        color: 0xc53d43,
+                        transparent: true,
+                        opacity: 0.8
+                    });
+                    
+                    const hotspot = new THREE.Mesh(geometry, material);
+                    hotspot.position.copy(position);
+                    hotspot.userData = { label, target };
+                    
+                    // Make hotspot interactive
+                    hotspot.userData.onClick = () => {
+                        this.loadPanorama(target);
+                    };
+                    
+                    this.scene.add(hotspot);
+                    this.hotspots.push(hotspot);
+                    
+                    // Create label element
+                    this.createHotspotLabel(hotspot, label);
+                }
+                
+                createHotspotLabel(hotspot, text) {
+                    // Create a div for the label
+                    const label = document.createElement('div');
+                    label.className = 'hotspot-label';
+                    label.textContent = text;
+                    label.style.display = 'none';
+                    document.body.appendChild(label);
+                    
+                    hotspot.userData.labelElement = label;
+                    
+                    // Update label position on render
+                    hotspot.userData.updateLabel = () => {
+                        const vector = new THREE.Vector3();
+                        hotspot.getWorldPosition(vector);
+                        vector.project(this.camera);
+                        
+                        const x = (vector.x * 0.5 + 0.5) * this.container.clientWidth;
+                        const y = (-vector.y * 0.5 + 0.5) * this.container.clientHeight;
+                        
+                        if (vector.z < 1) {
+                            label.style.left = x + 'px';
+                            label.style.top = y + 'px';
+                            label.style.display = 'block';
+                        } else {
+                            label.style.display = 'none';
+                        }
+                    };
+                }
+                
+                updateTourInfo(info) {
+                    const titleElement = document.querySelector('.tour-info h4');
+                    const descElement = document.querySelector('.tour-info p');
+                    
+                    if (titleElement && descElement) {
+                        titleElement.textContent = info.title;
+                        descElement.textContent = info.description;
+                    }
+                }
+                
+                setupControls() {
+                    // Mouse controls for rotation
+                    let isDragging = false;
+                    let previousMousePosition = { x: 0, y: 0 };
+                    
+                    this.container.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        previousMousePosition = { x: e.clientX, y: e.clientY };
+                        this.container.style.cursor = 'grabbing';
+                    });
+                    
+                    this.container.addEventListener('mousemove', (e) => {
+                        if (!isDragging) return;
+                        
+                        const deltaX = e.clientX - previousMousePosition.x;
+                        const deltaY = e.clientY - previousMousePosition.y;
+                        
+                        // Rotate camera based on mouse movement
+                        this.camera.rotation.y -= deltaX * 0.005;
+                        this.camera.rotation.x -= deltaY * 0.005;
+                        
+                        // Limit vertical rotation
+                        this.camera.rotation.x = Math.max(
+                            -Math.PI / 2,
+                            Math.min(Math.PI / 2, this.camera.rotation.x)
+                        );
+                        
+                        previousMousePosition = { x: e.clientX, y: e.clientY };
+                    });
+                    
+                    this.container.addEventListener('mouseup', () => {
+                        isDragging = false;
+                        this.container.style.cursor = 'grab';
+                    });
+                    
+                    this.container.addEventListener('mouseleave', () => {
+                        isDragging = false;
+                        this.container.style.cursor = 'grab';
+                    });
+                    
+                    // Click detection for hotspots
+                    this.container.addEventListener('click', (e) => {
+                        if (isDragging) return;
+                        
+                        const rect = this.container.getBoundingClientRect();
+                        const mouse = new THREE.Vector2(
+                            ((e.clientX - rect.left) / this.container.clientWidth) * 2 - 1,
+                            -((e.clientY - rect.top) / this.container.clientHeight) * 2 + 1
+                        );
+                        
+                        // Raycast to detect hotspot clicks
+                        const raycaster = new THREE.Raycaster();
+                        raycaster.setFromCamera(mouse, this.camera);
+                        
+                        const intersects = raycaster.intersectObjects(this.hotspots);
+                        if (intersects.length > 0) {
+                            const hotspot = intersects[0].object;
+                            if (hotspot.userData.onClick) {
+                                hotspot.userData.onClick();
+                            }
+                        }
+                    });
+                    
+                    // Initial cursor style
+                    this.container.style.cursor = 'grab';
+                }
+                
+                setupTouchControls() {
+                    let touchStart = null;
+                    let touchStartRotation = { x: 0, y: 0 };
+                    
+                    this.container.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        if (e.touches.length === 1) {
+                            touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                            touchStartRotation.x = this.camera.rotation.x;
+                            touchStartRotation.y = this.camera.rotation.y;
+                        }
+                    }, { passive: false });
+                    
+                    this.container.addEventListener('touchmove', (e) => {
+                        e.preventDefault();
+                        if (e.touches.length === 1 && touchStart) {
+                            const touch = e.touches[0];
+                            const deltaX = touch.clientX - touchStart.x;
+                            const deltaY = touch.clientY - touchStart.y;
+                            
+                            this.camera.rotation.y = touchStartRotation.y - deltaX * 0.01;
+                            this.camera.rotation.x = touchStartRotation.x - deltaY * 0.01;
+                            
+                            // Limit vertical rotation
+                            this.camera.rotation.x = Math.max(
+                                -Math.PI / 2,
+                                Math.min(Math.PI / 2, this.camera.rotation.x)
+                            );
+                        }
+                    }, { passive: false });
+                    
+                    this.container.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        touchStart = null;
+                        
+                        // Check for tap on hotspot
+                        if (e.changedTouches.length === 1) {
+                            const touch = e.changedTouches[0];
+                            const rect = this.container.getBoundingClientRect();
+                            const mouse = new THREE.Vector2(
+                                ((touch.clientX - rect.left) / this.container.clientWidth) * 2 - 1,
+                                -((touch.clientY - rect.top) / this.container.clientHeight) * 2 + 1
+                            );
+                            
+                            // Raycast to detect hotspot taps
+                            const raycaster = new THREE.Raycaster();
+                            raycaster.setFromCamera(mouse, this.camera);
+                            
+                            const intersects = raycaster.intersectObjects(this.hotspots);
+                            if (intersects.length > 0) {
+                                const hotspot = intersects[0].object;
+                                if (hotspot.userData.onClick) {
+                                    hotspot.userData.onClick();
+                                }
+                            }
+                        }
+                    }, { passive: false });
+                }
+                
+                animate() {
+                    requestAnimationFrame(() => this.animate());
+                    
+                    // Update hotspot labels
+                    this.hotspots.forEach(hotspot => {
+                        if (hotspot.userData.updateLabel) {
+                            hotspot.userData.updateLabel();
+                        }
+                    });
+                    
+                    // Simple rotation for visual interest
+                    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        this.camera.rotation.y += 0.0005;
+                    }
+                    
+                    this.renderer.render(this.scene, this.camera);
+                }
+                
+                onResize() {
+                    this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                }
+                
+                move(direction) {
+                    // For keyboard controls
+                    const speed = 0.5;
+                    switch(direction) {
+                        case 'forward':
+                            this.camera.translateZ(-speed);
+                            break;
+                        case 'back':
+                            this.camera.translateZ(speed);
+                            break;
+                        case 'left':
+                            this.camera.translateX(-speed);
+                            break;
+                        case 'right':
+                            this.camera.translateX(speed);
+                            break;
+                    }
+                }
+                
+                goToLocation(location) {
+                    this.loadPanorama(location);
+                }
+            }
+            
+            // Complete Interactive Cultural Map
+            class CompleteCulturalMap {
+                constructor() {
+                    this.canvas = document.getElementById('fusion-map-canvas');
+                    if (!this.canvas) return;
+                    
+                    this.ctx = this.canvas.getContext('2d');
+                    this.locations = [];
+                    this.selectedLocation = null;
+                    this.zoom = 1;
+                    this.offsetX = 0;
+                    this.offsetY = 0;
+                    this.isDragging = false;
+                    this.lastX = 0;
+                    this.lastY = 0;
+                    this.isMobile = window.innerWidth <= 768;
+                    
+                    this.init();
+                    this.animate();
+                    this.setupInteractions();
+                    
+                    window.addEventListener('resize', () => this.onResize());
+                }
+                
+                init() {
+                    this.canvas.width = this.canvas.parentElement.clientWidth;
+                    this.canvas.height = this.canvas.parentElement.clientHeight;
+                    
+                    // Define cultural locations
+                    this.locations = [
+                        { 
+                            x: 200, y: 300, 
+                            type: 'japanese', 
+                            name: 'Karesansui Garden', 
+                            color: '#c53d43', 
+                            icon: '🏯',
+                            description: 'Traditional Japanese dry landscape garden for meditation and contemplation.'
+                        },
+                        { 
+                            x: 400, y: 450, 
+                            type: 'italian', 
+                            name: 'Piazza Fontana', 
+                            color: '#b3543a', 
+                            icon: '⛲',
+                            description: 'Italian-style courtyard with Renaissance fountain and marble benches.'
+                        },
+                        { 
+                            x: 600, y: 350, 
+                            type: 'fusion', 
+                            name: 'Sakura Colonnade', 
+                            color: '#d4b483', 
+                            icon: '🌸',
+                            description: 'Cherry blossom lined walkway with classical Italian columns.'
+                        },
+                        { 
+                            x: 300, y: 150, 
+                            type: 'japanese', 
+                            name: 'Cha-no-yu House', 
+                            color: '#c53d43', 
+                            icon: '🍵',
+                            description: 'Traditional Japanese tea ceremony house with tatami floors.'
+                        },
+                        { 
+                            x: 500, y: 200, 
+                            type: 'italian', 
+                            name: 'Loggia Fresco', 
+                            color: '#b3543a', 
+                            icon: '🎨',
+                            description: 'Covered walkway with Renaissance fresco paintings and arches.'
+                        },
+                        { 
+                            x: 700, y: 250, 
+                            type: 'fusion', 
+                            name: 'Zen Atrium', 
+                            color: '#d4b483', 
+                            icon: '☯',
+                            description: 'Fusion space combining Zen garden principles with Roman atrium design.'
+                        },
+                        { 
+                            x: 800, y: 500, 
+                            type: 'nature', 
+                            name: 'Bamboo Grove', 
+                            color: '#556b2f', 
+                            icon: '🎋',
+                            description: 'Peaceful bamboo forest with walking paths and resting areas.'
+                        },
+                        { 
+                            x: 100, y: 400, 
+                            type: 'nature', 
+                            name: 'Olive Orchard', 
+                            color: '#556b2f', 
+                            icon: '🫒',
+                            description: 'Traditional Italian olive grove with century-old trees.'
+                        }
+                    ];
+                }
+                
+                draw() {
+                    // Clear canvas
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    
+                    // Save context for zoom/pan
+                    this.ctx.save();
+                    this.ctx.translate(this.canvas.width/2, this.canvas.height/2);
+                    this.ctx.scale(this.zoom, this.zoom);
+                    this.ctx.translate(this.offsetX, this.offsetY);
+                    
+                    // Draw background with cultural patterns
+                    this.drawBackground();
+                    
+                    // Draw paths between locations
+                    this.drawPaths();
+                    
+                    // Draw locations
+                    this.locations.forEach(location => {
+                        this.drawLocation(location);
+                    });
+                    
+                    // Restore context
+                    this.ctx.restore();
+                    
+                    // Draw selected location info
+                    if (this.selectedLocation) {
+                        this.drawLocationInfo(this.selectedLocation);
+                    }
+                    
+                    // Draw zoom indicator
+                    this.drawZoomIndicator();
+                }
+                
+                drawBackground() {
+                    // Base gradient
+                    const gradient = this.ctx.createLinearGradient(
+                        -this.canvas.width/2, -this.canvas.height/2,
+                        this.canvas.width/2, this.canvas.height/2
+                    );
+                    gradient.addColorStop(0, '#f5f1e8');
+                    gradient.addColorStop(1, '#e8e1d3');
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.fillRect(-this.canvas.width/2, -this.canvas.height/2, this.canvas.width, this.canvas.height);
+                    
+                    // Simplified patterns for mobile
+                    if (!this.isMobile) {
+                        // Japanese pattern (seigaiha waves)
+                        this.ctx.strokeStyle = 'rgba(197, 61, 67, 0.1)';
+                        this.ctx.lineWidth = 1;
+                        
+                        for (let x = -this.canvas.width/2; x < this.canvas.width/2; x += 60) {
+                            for (let y = -this.canvas.height/2; y < this.canvas.height/2; y += 60) {
+                                this.ctx.beginPath();
+                                this.ctx.arc(x, y, 20, 0, Math.PI * 2);
+                                this.ctx.stroke();
+                            }
+                        }
+                    }
+                    
+                    // Draw water features
+                    this.ctx.fillStyle = 'rgba(42, 92, 138, 0.1)';
+                    this.ctx.beginPath();
+                    this.ctx.ellipse(0, 0, 200, 100, 0, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    
+                    // Draw garden areas
+                    this.ctx.fillStyle = 'rgba(86, 107, 47, 0.1)';
+                    this.ctx.beginPath();
+                    this.ctx.ellipse(-200, -100, 150, 80, Math.PI/4, 0, Math.PI * 2);
+                    this.ctx.ellipse(200, 100, 150, 80, -Math.PI/4, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+                
+                drawPaths() {
+                    const mainHub = this.locations.find(loc => loc.name === 'Sakura Colonnade');
+                    if (!mainHub) return;
+                    
+                    this.ctx.strokeStyle = 'rgba(212, 180, 131, 0.3)';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.setLineDash([5, 5]);
+                    
+                    this.locations.forEach(location => {
+                        if (location !== mainHub) {
+                            const gradient = this.ctx.createLinearGradient(
+                                mainHub.x, mainHub.y,
+                                location.x, location.y
+                            );
+                            gradient.addColorStop(0, mainHub.color + '80');
+                            gradient.addColorStop(1, location.color + '80');
+                            
+                            this.ctx.strokeStyle = gradient;
+                            
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(mainHub.x, mainHub.y);
+                            this.ctx.lineTo(location.x, location.y);
+                            this.ctx.stroke();
+                        }
+                    });
+                    
+                    this.ctx.setLineDash([]);
+                }
+                
+                drawLocation(location) {
+                    const size = this.isMobile ? 20 : 25;
+                    const fontSize = this.isMobile ? 12 : 14;
+                    
+                    // Draw glow effect
+                    this.ctx.beginPath();
+                    this.ctx.arc(location.x, location.y, size + 15, 0, Math.PI * 2);
+                    const gradient = this.ctx.createRadialGradient(
+                        location.x, location.y, size,
+                        location.x, location.y, size + 15
+                    );
+                    gradient.addColorStop(0, location.color + '80');
+                    gradient.addColorStop(1, 'transparent');
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.fill();
+                    
+                    // Draw outer ring
+                    this.ctx.beginPath();
+                    this.ctx.arc(location.x, location.y, size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = location.color;
+                    this.ctx.fill();
+                    
+                    // Draw inner circle
+                    this.ctx.beginPath();
+                    this.ctx.arc(location.x, location.y, size - 7, 0, Math.PI * 2);
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.fill();
+                    
+                    // Draw icon
+                    this.ctx.font = `bold ${this.isMobile ? '16px' : '20px'} Arial`;
+                    this.ctx.fillStyle = location.color;
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+                    this.ctx.fillText(location.icon, location.x, location.y);
+                    
+                    // Draw name with background
+                    this.ctx.font = `bold ${fontSize}px Inter`;
+                    const textWidth = this.ctx.measureText(location.name).width;
+                    
+                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    this.ctx.fillRect(
+                        location.x - textWidth/2 - 10,
+                        location.y + size + 5,
+                        textWidth + 20,
+                        25
+                    );
+                    
+                    this.ctx.fillStyle = location.color;
+                    this.ctx.fillText(location.name, location.x, location.y + size + 20);
+                    
+                    // Pulse animation for selected location
+                    if (this.selectedLocation === location) {
+                        const time = Date.now() * 0.002;
+                        const pulse = Math.sin(time) * 10 + (size + 5);
+                        
+                        this.ctx.beginPath();
+                        this.ctx.arc(location.x, location.y, pulse, 0, Math.PI * 2);
+                        this.ctx.strokeStyle = location.color;
+                        this.ctx.lineWidth = 2;
+                        this.ctx.stroke();
+                    }
+                }
+                
+                drawLocationInfo(location) {
+                    const infoWidth = this.isMobile ? 250 : 300;
+                    const infoHeight = this.isMobile ? 120 : 150;
+                    let x = 20;
+                    let y = 20;
+                    
+                    // Box with shadow
+                    this.ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+                    this.ctx.shadowBlur = 20;
+                    this.ctx.shadowOffsetX = 0;
+                    this.ctx.shadowOffsetY = 5;
+                    
+                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                    this.ctx.strokeStyle = location.color;
+                    this.ctx.lineWidth = 2;
+                    
+                    // Rounded rectangle
+                    const radius = 15;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x + radius, y);
+                    this.ctx.lineTo(x + infoWidth - radius, y);
+                    this.ctx.quadraticCurveTo(x + infoWidth, y, x + infoWidth, y + radius);
+                    this.ctx.lineTo(x + infoWidth, y + infoHeight - radius);
+                    this.ctx.quadraticCurveTo(x + infoWidth, y + infoHeight, x + infoWidth - radius, y + infoHeight);
+                    this.ctx.lineTo(x + radius, y + infoHeight);
+                    this.ctx.quadraticCurveTo(x, y + infoHeight, x, y + infoHeight - radius);
+                    this.ctx.lineTo(x, y + radius);
+                    this.ctx.quadraticCurveTo(x, y, x + radius, y);
+                    this.ctx.closePath();
+                    this.ctx.fill();
+                    this.ctx.stroke();
+                    
+                    // Reset shadow
+                    this.ctx.shadowBlur = 0;
+                    this.ctx.shadowOffsetY = 0;
+                    
+                    // Content
+                    this.ctx.fillStyle = location.color;
+                    this.ctx.font = `bold ${this.isMobile ? '16px' : '18px'} Inter`;
+                    this.ctx.fillText(location.name, x + 20, y + 30);
+                    
+                    this.ctx.fillStyle = '#4b5563';
+                    this.ctx.font = `${this.isMobile ? '12px' : '14px'} Inter`;
+                    
+                    const lines = this.wrapText(location.description, infoWidth - 40);
+                    lines.forEach((line, i) => {
+                        this.ctx.fillText(line, x + 20, y + 55 + i * (this.isMobile ? 16 : 20));
+                    });
+                }
+                
+                drawZoomIndicator() {
+                    const x = this.canvas.width - 120;
+                    const y = 20;
+                    
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    this.ctx.fillRect(x, y, 100, 40);
+                    
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.font = '14px Inter';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(`Zoom: ${this.zoom.toFixed(1)}x`, x + 50, y + 25);
+                }
+                
+                wrapText(text, maxWidth) {
+                    const words = text.split(' ');
+                    const lines = [];
+                    let currentLine = words[0];
+                    
+                    for (let i = 1; i < words.length; i++) {
+                        const word = words[i];
+                        const width = this.ctx.measureText(currentLine + ' ' + word).width;
+                        if (width < maxWidth) {
+                            currentLine += ' ' + word;
+                        } else {
+                            lines.push(currentLine);
+                            currentLine = word;
+                        }
+                    }
+                    lines.push(currentLine);
+                    return lines;
+                }
+                
+                setupInteractions() {
+                    // Mouse wheel zoom
+                    this.canvas.addEventListener('wheel', (e) => {
+                        e.preventDefault();
+                        const zoomFactor = 1.1;
+                        const rect = this.canvas.getBoundingClientRect();
+                        const mouseX = e.clientX - rect.left;
+                        const mouseY = e.clientY - rect.top;
+                        
+                        const worldX = (mouseX - this.canvas.width/2) / this.zoom + this.offsetX;
+                        const worldY = (mouseY - this.canvas.height/2) / this.zoom + this.offsetY;
+                        
+                        if (e.deltaY < 0) {
+                            this.zoom *= zoomFactor;
+                        } else {
+                            this.zoom /= zoomFactor;
+                        }
+                        
+                        this.zoom = Math.max(0.5, Math.min(3, this.zoom));
+                        
+                        const newWorldX = (mouseX - this.canvas.width/2) / this.zoom + this.offsetX;
+                        const newWorldY = (mouseY - this.canvas.height/2) / this.zoom + this.offsetY;
+                        
+                        this.offsetX += (newWorldX - worldX);
+                        this.offsetY += (newWorldY - worldY);
+                    });
+                    
+                    // Mouse drag pan
+                    this.canvas.addEventListener('mousedown', (e) => {
+                        this.isDragging = true;
+                        this.lastX = e.clientX;
+                        this.lastY = e.clientY;
+                        this.canvas.style.cursor = 'grabbing';
+                    });
+                    
+                    this.canvas.addEventListener('mousemove', (e) => {
+                        if (this.isDragging) {
+                            const dx = e.clientX - this.lastX;
+                            const dy = e.clientY - this.lastY;
+                            
+                            this.offsetX += dx / this.zoom;
+                            this.offsetY += dy / this.zoom;
+                            
+                            this.lastX = e.clientX;
+                            this.lastY = e.clientY;
+                        }
+                        
+                        // Hover detection
+                        const rect = this.canvas.getBoundingClientRect();
+                        const mouseX = e.clientX - rect.left;
+                        const mouseY = e.clientY - rect.top;
+                        
+                        const worldX = (mouseX - this.canvas.width/2) / this.zoom + this.offsetX;
+                        const worldY = (mouseY - this.canvas.height/2) / this.zoom + this.offsetY;
+                        
+                        let hovered = false;
+                        for (const location of this.locations) {
+                            const distance = Math.sqrt(
+                                Math.pow(worldX - location.x, 2) + 
+                                Math.pow(worldY - location.y, 2)
+                            );
+                            if (distance < 25) {
+                                this.canvas.style.cursor = 'pointer';
+                                hovered = true;
+                                if (!this.selectedLocation || this.selectedLocation !== location) {
+                                    this.selectedLocation = location;
+                                }
+                                break;
+                            }
+                        }
+                        
+                        if (!hovered) {
+                            this.canvas.style.cursor = this.isDragging ? 'grabbing' : 'default';
+                            this.selectedLocation = null;
+                        }
+                    });
+                    
+                    this.canvas.addEventListener('mouseup', () => {
+                        this.isDragging = false;
+                        this.canvas.style.cursor = 'default';
+                    });
+                    
+                    this.canvas.addEventListener('mouseleave', () => {
+                        this.isDragging = false;
+                        this.canvas.style.cursor = 'default';
+                    });
+                    
+                    // Click to show details
+                    this.canvas.addEventListener('click', (e) => {
+                        if (this.selectedLocation) {
+                            this.showLocationPopup(this.selectedLocation);
+                        }
+                    });
+                    
+                    // Touch events for mobile
+                    if (this.isMobile) {
+                        this.setupTouchInteractions();
+                    }
+                }
+                
+                setupTouchInteractions() {
+                    let touchStart = null;
+                    let touchStartOffset = { x: 0, y: 0 };
+                    let touchStartZoom = 1;
+                    
+                    this.canvas.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        if (e.touches.length === 1) {
+                            touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                            touchStartOffset.x = this.offsetX;
+                            touchStartOffset.y = this.offsetY;
+                        } else if (e.touches.length === 2) {
+                            touchStartZoom = this.zoom;
+                        }
+                    }, { passive: false });
+                    
+                    this.canvas.addEventListener('touchmove', (e) => {
+                        e.preventDefault();
+                        
+                        if (e.touches.length === 1 && touchStart) {
+                            const touch = e.touches[0];
+                            const dx = touch.clientX - touchStart.x;
+                            const dy = touch.clientY - touchStart.y;
+                            
+                            this.offsetX = touchStartOffset.x + dx / this.zoom;
+                            this.offsetY = touchStartOffset.y + dy / this.zoom;
+                        } else if (e.touches.length === 2) {
+                            // Pinch zoom
+                            const touch1 = e.touches[0];
+                            const touch2 = e.touches[1];
+                            
+                            const distance = Math.sqrt(
+                                Math.pow(touch2.clientX - touch1.clientX, 2) +
+                                Math.pow(touch2.clientY - touch1.clientY, 2)
+                            );
+                            
+                            const rect = this.canvas.getBoundingClientRect();
+                            const centerX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
+                            const centerY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
+                            
+                            const worldX = (centerX - this.canvas.width/2) / this.zoom + this.offsetX;
+                            const worldY = (centerY - this.canvas.height/2) / this.zoom + this.offsetY;
+                            
+                            this.zoom = Math.max(0.5, Math.min(3, touchStartZoom * (distance / 100)));
+                            
+                            const newWorldX = (centerX - this.canvas.width/2) / this.zoom + this.offsetX;
+                            const newWorldY = (centerY - this.canvas.height/2) / this.zoom + this.offsetY;
+                            
+                            this.offsetX += (newWorldX - worldX);
+                            this.offsetY += (newWorldY - worldY);
+                        }
+                    }, { passive: false });
+                    
+                    this.canvas.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        touchStart = null;
+                        
+                        // Check for tap on location
+                        if (e.changedTouches.length === 1 && this.selectedLocation) {
+                            this.showLocationPopup(this.selectedLocation);
+                        }
+                    }, { passive: false });
+                }
+                
+                showLocationPopup(location) {
+                    const popup = document.createElement('div');
+                    popup.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        padding: ${this.isMobile ? '1.5rem' : '2rem'};
+                        border-radius: 15px;
+                        box-shadow: 0 20px 60px rgba(45, 41, 38, 0.3);
+                        z-index: 10000;
+                        max-width: ${this.isMobile ? '300px' : '400px'};
+                        text-align: center;
+                        border: 2px solid ${location.color};
+                    `;
+                    
+                    popup.innerHTML = `
+                        <div style="font-size: ${this.isMobile ? '2.5rem' : '3rem'}; margin-bottom: 1rem;">${location.icon}</div>
+                        <h3 style="color: ${location.color}; margin-bottom: 1rem; font-family: 'Cinzel', serif; font-size: ${this.isMobile ? '1.3rem' : '1.5rem'};">${location.name}</h3>
+                        <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.6; font-size: ${this.isMobile ? '0.9rem' : '1rem'};">${location.description}</p>
+                        <button onclick="this.parentElement.remove()" style="
+                            background: ${location.color};
+                            color: white;
+                            border: none;
+                            padding: ${this.isMobile ? '0.6rem 1.5rem' : '0.75rem 2rem'};
+                            border-radius: 25px;
+                            cursor: pointer;
+                            font-family: inherit;
+                            font-size: ${this.isMobile ? '0.85rem' : '0.9rem'};
+                            min-height: 44px;
+                            min-width: 44px;
+                        ">Explore Location</button>
+                    `;
+                    
+                    document.body.appendChild(popup);
+                    
+                    // Close on background click
+                    popup.addEventListener('click', (e) => e.stopPropagation());
+                    document.addEventListener('click', function closePopup() {
+                        popup.remove();
+                        document.removeEventListener('click', closePopup);
+                    });
+                    
+                    // Close on escape key
+                    document.addEventListener('keydown', function closeOnEscape(e) {
+                        if (e.key === 'Escape') {
+                            popup.remove();
+                            document.removeEventListener('keydown', closeOnEscape);
+                        }
+                    });
+                }
+                
+                animate() {
+                    requestAnimationFrame(() => this.animate());
+                    this.draw();
+                }
+                
+                onResize() {
+                    this.canvas.width = this.canvas.parentElement.clientWidth;
+                    this.canvas.height = this.canvas.parentElement.clientHeight;
+                }
+                
+                zoomIn() {
+                    this.zoom = Math.min(this.zoom * 1.2, 3);
+                }
+                
+                zoomOut() {
+                    this.zoom = Math.max(this.zoom / 1.2, 0.5);
+                }
+                
+                reset() {
+                    this.zoom = 1;
+                    this.offsetX = 0;
+                    this.offsetY = 0;
+                    this.selectedLocation = null;
+                }
+            }
+            
+            // Initialize everything when page loads
+            // Initialize 3D model
+            const fusionModel = new CompleteFusionModel();
+            
+            // Initialize interactive map
+            const culturalMap = new CompleteCulturalMap();
+            
+            // Initialize virtual tour
+            const virtualTour = new EnhancedVirtualTour();
+            
+            // Store references globally for controls
+            window.fusionModel = fusionModel;
+            window.culturalMap = culturalMap;
+            window.virtualTour = virtualTour;
+            
+            // Animate property cards on scroll
+            gsap.utils.toArray('.property-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 1,
+                    delay: i * 0.1,
+                    ease: 'power3.out'
+                });
+            });
+            
+            // Search functionality
+            const searchBtn = document.querySelector('.search-btn');
+            if (searchBtn) {
+                searchBtn.addEventListener('click', function() {
+                    const searchInput = document.querySelector('.search-input input')?.value;
+                    const propertyType = document.querySelector('.search-filters select:nth-child(1)')?.value;
+                    const bedrooms = document.querySelector('.search-filters select:nth-child(2)')?.value;
+                    const priceRange = document.querySelector('.search-filters select:nth-child(3)')?.value;
+                    
+                    // In a real implementation, this would filter properties
+                    alert(`Searching for: ${searchInput || 'all properties'}\nType: ${propertyType}\nBedrooms: ${bedrooms}\nPrice: ${priceRange}`);
+                });
+            }
+            
+            // Search tags functionality
+            document.querySelectorAll('.search-tags span').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const searchInput = document.querySelector('.search-input input');
+                    if (searchInput) {
+                        searchInput.value = this.textContent;
+                    }
+                });
+            });
+            
+            // Property card buttons
+            document.querySelectorAll('.property-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const propertyCard = this.closest('.property-card');
+                    const propertyName = propertyCard.querySelector('.property-name')?.textContent;
+                    if (propertyName) {
+                        alert(`Showing details for: ${propertyName}\nThis would open a detailed property view.`);
+                    }
+                });
+            });
+            
+            // Smooth scroll for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Mobile-specific optimizations
+            if (window.innerWidth <= 768) {
+                // Reduce animation intensity on mobile
+                gsap.globalTimeline.timeScale(1.2);
+            }
+        }
+        
+        // Model control functions
+        function rotateModel(direction) {
+            if (window.fusionModel) {
+                window.fusionModel.rotate(direction);
+            }
+        }
+        
+        function toggleAutoRotate() {
+            if (window.fusionModel) {
+                window.fusionModel.toggleAutoRotate();
+                const btn = document.querySelector('.model-btn:nth-child(3)');
+                if (btn) {
+                    btn.style.background = window.fusionModel.autoRotate ? 'var(--beni)' : '';
+                    btn.style.color = window.fusionModel.autoRotate ? 'white' : '';
+                }
+            }
+        }
+        
+        function resetModel() {
+            if (window.fusionModel) {
+                window.fusionModel.reset();
+            }
+        }
+        
+        // Map control functions
+        function mapZoomIn() {
+            if (window.culturalMap) {
+                window.culturalMap.zoomIn();
+            }
+        }
+        
+        function mapZoomOut() {
+            if (window.culturalMap) {
+                window.culturalMap.zoomOut();
+            }
+        }
+        
+        function resetMap() {
+            if (window.culturalMap) {
+                window.culturalMap.reset();
+            }
+        }
+        
+        // Tour control functions
+        function tourMove(direction) {
+            if (window.virtualTour) {
+                window.virtualTour.move(direction);
+            }
+        }
+        
+        function tourToLocation(location) {
+            if (window.virtualTour) {
+                window.virtualTour.goToLocation(location);
+            }
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            // Reinitialize components if needed
+            if (window.virtualTour) {
+                window.virtualTour.onResize();
+            }
+            if (window.fusionModel) {
+                window.fusionModel.onResize();
+            }
+            if (window.culturalMap) {
+                window.culturalMap.onResize();
+            }
+        });
+    </script>
+</body>
+</html>
